@@ -91,49 +91,52 @@ exports.login = (req, res) => {
 exports.update = (req, res) => {
     const { firstname, lastname } = req.body
     mysql.query(
-        //vérification que l'utilisateur est existant
+        //vérification que la fiche utilisateur existe dans la base
         'SELECT * FROM users WHERE id = ?', req.params.id, (error, results) => {
             if (results == 0) {
                 return res.status(404).json({ message: `utilisateur non existant` })
             }
             else {
-                //variables pour la requête de mise a jour afin de changer par concaténation éventuellement plusieurs info simultanément
-                let query = 'UPDATE users SET '
-                let params = []
+                //vérification si auteur ou admin
+                if (results[0].id == req.auth.userId || req.auth.admin == 1) {
+                    //variables pour la requête de mise a jour afin de changer par concaténation éventuellement plusieurs info simultanément
+                    let query = 'UPDATE users SET '
+                    let params = []
 
-                //si envoi d'une image
-                if (req.file) {
-                    // si image déjà affectée à l'utilisateur, on procède a sa supression
-                    if (results[0].avatar != null) {
-                        const avatarOld = results[0].avatar.split("/avatars/")[1]
-                        fs.unlink(`${`assets/avatars/${avatarOld}`}`, () => { })
+                    //si envoi d'une image
+                    if (req.file) {
+                        // si image déjà affectée à l'utilisateur, on procède a sa supression
+                        if (results[0].avatar != null) {
+                            const avatarOld = results[0].avatar.split("/avatars/")[1]
+                            fs.unlink(`${`assets/avatars/${avatarOld}`}`, () => { })
+                        }
+                        //déclaration d'un nouveau nom de fichier pour la nouvelle image
+                        const newAvatar = `${req.protocol}://${req.get('host')}/assets/avatars/${req.file.filename}`
+                        // personalisation de la rêquete mysql
+                        query = query + 'avatar = ?,'
+                        //ajouter de l'url du ficher dans un tableau
+                        params.push(newAvatar)
                     }
-                    //déclaration d'un nouveau nom de fichier pour la nouvelle image
-                    const newAvatar = `${req.protocol}://${req.get('host')}/assets/avatars/${req.file.filename}`
-                    // personalisation de la rêquete mysql
-                    query = query + 'avatar = ?,'
-                    //ajouter de l'url du ficher dans un tableau
-                    params.push(newAvatar)
-                }
-                //si l'utilisateur change son prénom
-                if (firstname) {
-                    query = query + 'firstname = ?,'
-                    params.push(firstname)
-                }
-                //si l'utilisateur change son non
-                if (lastname) {
-                    query = query + 'lastname = ?,'
-                    params.push(lastname)
-                }
-                //concaténation pour la finaliser "l'assemblage" de la requête en enlevant la dernière virgule présente dans le tableau
-                query = query.substring(0, query.length - 1) + ' where id = ? '
-                params.push(req.params.id)
+                    //si l'utilisateur change son prénom
+                    if (firstname) {
+                        query = query + 'firstname = ?,'
+                        params.push(firstname)
+                    }
+                    //si l'utilisateur change son non
+                    if (lastname) {
+                        query = query + 'lastname = ?,'
+                        params.push(lastname)
+                    }
+                    //concaténation pour la finaliser "l'assemblage" de la requête en enlevant la dernière virgule présente dans le tableau
+                    query = query.substring(0, query.length - 1) + ' where id = ? '
+                    params.push(req.params.id)
 
-                //envoi de la requête a la base de donnée
-                mysql.query(query, params, (error, results) => {
-                    if (error) throw error
-                    res.status(201).json({ message: "utilisateur modifié" })
-                })
+                    //envoi de la requête a la base de donnée
+                    mysql.query(query, params, (error, results) => {
+                        if (error) throw error
+                        res.status(201).json({ message: "utilisateur modifié" })
+                    })
+                } else res.status(404).json({ message: `l'utilisateur n'est pas l'auteur et n'est pas admin` })
             }
         }
     )
@@ -141,35 +144,33 @@ exports.update = (req, res) => {
 
 // mise à jour du mot de passe
 exports.updatePassword = (req, res) => {
-    const userId = req.params.id
-    const { password } = req.body
-    //recherche si l'utilisateur est existant
+    //recherche si la fiche utilisateur est existante dans la base
     mysql.query(
-        'SELECT * FROM users WHERE id = ?', [req.params.id], (error, results) => {
+        'SELECT * FROM users WHERE id = ?', req.params.id, (error, results) => {
             if (results == 0) {
                 return res.status(404).json({ message: `utilisateur non existant` })
             }
-            if (password) {
-                //cryptage du nouveau mot de passe
-                bcrypt.hash(req.body.password, 10)
-                    .then(hash => {
-                        //mise a jour du mdp dans la base de donnée
-                        mysql.query(
-                            `UPDATE user SET password = ? WHERE id = ?`,
-                            [hash, userId],
-                            (error) => {
-                                if (error) {
-                                    res.json({ error })
-                                } else {
-                                    res.status(200).json({ message: `mot de passe modifié` })
+            //vérification si auteur ou admin
+            if (results[0].id == req.auth.userId || req.auth.admin == 1) {
+                if (password) {
+                    //cryptage du nouveau mot de passe
+                    bcrypt.hash(req.body.password, 10)
+                        .then(hash => {
+                            //mise a jour du mdp dans la base de donnée
+                            mysql.query(
+                                `UPDATE users SET password = ? WHERE id = ?`,
+                                [hash, req.params.id],
+                                (error) => {
+                                    if (error) {
+                                        res.json({ error })
+                                    } else {
+                                        res.status(200).json({ message: `mot de passe modifié` })
+                                    }
                                 }
-                            }
-                        )
-                    })
-            }
-            else {
-                res.status(403).json({ error })
-            }
+                            )
+                        })
+                }
+            } else res.status(404).json({ message: `l'utilisateur n'est pas l'auteur et n'est pas admin` })
         }
     )
 }
@@ -179,10 +180,10 @@ exports.delete = (req, res) => {
     //vérification que l'utilisateur est présent dans la base de donnée 
     mysql.query(
         'SELECT * FROM users WHERE id = ?', req.params.id, (error, results) => {
-            if (results == 0) {
-                return res.status(404).json({ message: `utilisateur non existant` })
-            }
-            else {
+            if (results == 0) res.status(404).json({ message: `utilisateur non existant` })
+
+            //vérification si auteur ou admin
+            if (results[0].id == req.auth.userId || req.auth.admin == 1) {
                 // supression de l'image si existante
                 if (results[0].avatar != null) {
                     const avatar = results[0].avatar.split("/avatars/")[1];
@@ -199,7 +200,7 @@ exports.delete = (req, res) => {
                         }
                     }
                 )
-            }
+            } else res.status(404).json({ message: `l'utilisateur n'est pas l'auteur et n'est pas admin` })
         }
     )
 }
