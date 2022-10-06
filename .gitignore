@@ -1,0 +1,7 @@
+node_modules
+.env
+.vscode
+cert.pem
+key.pem
+#/backend/assets/attachments/*
+#/backend/assets/avatars/*
