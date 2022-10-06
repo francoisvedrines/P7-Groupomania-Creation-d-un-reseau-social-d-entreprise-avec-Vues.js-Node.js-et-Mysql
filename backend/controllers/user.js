@@ -54,16 +54,16 @@ exports.login = (req, res) => {
         return res.status(401).json({ message: 'Identifiant ou mot de passe non saisie' })
     //recherche de l'email dans la base de donnée
     mysql.query(
-        'SELECT * FROM users WHERE email = ?', req.body.email, (error, results) => {
+        'SELECT * FROM users WHERE email = ?', req.body.email, (error, result) => {
             if (error) {
                 res.status(401).json({ error })
             } else {
                 // si l'email n'est pas présent dans la db
-                if (results == 0) {
+                if (result == 0) {
                     res.status(403).json({ message: "utilisateur non présent dans la db" })
                 } else {
                     //comparaison du mot de passe enregistré avec celui saisie
-                    bcrypt.compare(req.body.password, results[0].password)
+                    bcrypt.compare(req.body.password, result[0].password)
                         .then(valid => {
                             if (!valid) {
                                 res.status(401).send({ message: 'Paire identifiant/mot de passe incorrecte' })
@@ -71,13 +71,13 @@ exports.login = (req, res) => {
                                 //insertion de l'id et de isAdmin dans un token
                                 const token = jwt.sign(
                                     {
-                                        userId: results[0].id,
-                                        admin: results[0].isAdmin
+                                        userId: result[0].id,
+                                        admin: result[0].isAdmin
                                     },
                                     keyToken,
                                     { expiresIn: '12h' }
                                 )
-                                res.status(200).json({ userId: results[0].id, token, admin: results[0].isAdmin })
+                                res.status(200).json({ userId: result[0].id, token, admin: result[0].isAdmin })
                             }
                         })
                         .catch((error) => res.status(500).json({ error }))
@@ -92,13 +92,13 @@ exports.update = (req, res) => {
     const { firstname, lastname } = req.body
     mysql.query(
         //vérification que la fiche utilisateur existe dans la base
-        'SELECT * FROM users WHERE id = ?', req.params.id, (error, results) => {
-            if (results == 0) {
+        'SELECT * FROM users WHERE id = ?', req.params.id, (error, result) => {
+            if (result == 0) {
                 return res.status(404).json({ message: `utilisateur non existant` })
             }
             else {
                 //vérification si auteur ou admin
-                if (results[0].id == req.auth.userId || req.auth.admin == 1) {
+                if (result[0].id == req.auth.userId || req.auth.admin == 1) {
                     //variables pour la requête de mise a jour afin de changer par concaténation éventuellement plusieurs info simultanément
                     let query = 'UPDATE users SET '
                     let params = []
@@ -106,8 +106,8 @@ exports.update = (req, res) => {
                     //si envoi d'une image
                     if (req.file) {
                         // si image déjà affectée à l'utilisateur, on procède a sa supression
-                        if (results[0].avatar != null) {
-                            const avatarOld = results[0].avatar.split("/avatars/")[1]
+                        if (result[0].avatar != null) {
+                            const avatarOld = result[0].avatar.split("/avatars/")[1]
                             fs.unlink(`${`assets/avatars/${avatarOld}`}`, () => { })
                         }
                         //déclaration d'un nouveau nom de fichier pour la nouvelle image
@@ -146,12 +146,12 @@ exports.update = (req, res) => {
 exports.updatePassword = (req, res) => {
     //recherche si la fiche utilisateur est existante dans la base
     mysql.query(
-        'SELECT * FROM users WHERE id = ?', req.params.id, (error, results) => {
-            if (results == 0) {
+        'SELECT * FROM users WHERE id = ?', req.params.id, (error, result) => {
+            if (result == 0) {
                 return res.status(404).json({ message: `utilisateur non existant` })
             }
             //vérification si auteur ou admin
-            if (results[0].id == req.auth.userId || req.auth.admin == 1) {
+            if (result[0].id == req.auth.userId || req.auth.admin == 1) {
                 if (password) {
                     //cryptage du nouveau mot de passe
                     bcrypt.hash(req.body.password, 10)
@@ -181,7 +181,6 @@ exports.delete = (req, res) => {
     mysql.query(
         'SELECT * FROM users WHERE id = ?', req.params.id, (error, results) => {
             if (results == 0) res.status(404).json({ message: `utilisateur non existant` })
-
             //vérification si auteur ou admin
             if (results[0].id == req.auth.userId || req.auth.admin == 1) {
                 // supression de l'image si existante
