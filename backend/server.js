@@ -3,10 +3,12 @@
 /************************************************************/
 const http = require('http')
 const app = require('./app')
-
+/***** A activer en mode production pour utiliser https ***/ 
+// const fs  = require('fs')
+// const https = require('https')
 
 //normalisation du port
-const normalizePort= val =>{
+const normalizePort= val => {
     const port= parseInt(val,10)
     if (isNaN(port)) {
       return val
@@ -40,6 +42,12 @@ const errorHandler = error => {
       throw error
   }
 }
+/******serveur https à activer en mode production ********/
+// const options = {
+//   key: fs.readFileSync('key.pem'),
+//   cert: fs.readFileSync('cert.pem')
+// }
+// const server = https.createServer(options, app)
 
 const server = http.createServer(app)
 
