@@ -1,7 +1,7 @@
 const validator = require('email-validator');
 
 
-module.exports = (req, res) => {
+module.exports = (req, res, next) => {
    const {email} = req.body
    if(validator.validate(email)){
     next()
