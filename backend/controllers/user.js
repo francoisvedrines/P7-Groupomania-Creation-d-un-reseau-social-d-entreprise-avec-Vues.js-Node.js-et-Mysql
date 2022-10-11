@@ -75,7 +75,7 @@ exports.login = (req, res) => {
                                         admin: result[0].isAdmin
                                     },
                                     keyToken,
-                                    { expiresIn: '12h' }
+                                    { expiresIn: '2h' }
                                 )
                                 res.status(200).json({ userId: result[0].id, token, admin: result[0].isAdmin })
                             }
@@ -206,3 +206,15 @@ exports.delete = (req, res) => {
 
 
 
+// fonction d'affichage de tout les utilisateurs existants
+exports.getAllUsers = (req, res) => {
+    mysql.query(
+        'SELECT * FROM users ORDER BY users.lastname ASC', (error, result) => {
+            if (error) {
+                res.status(400).json({ error })
+            } else {
+                res.status(200).json(result)
+            }
+        }
+    )
+}

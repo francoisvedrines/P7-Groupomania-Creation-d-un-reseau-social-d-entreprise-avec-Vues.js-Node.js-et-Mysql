@@ -12,9 +12,9 @@ const auth = require('../middleware/auth')
 const multer = require('../middleware/multer-user')
 
 router.post ('/signup', emailValidator, passwordValidator, userCtrl.signup)
-router.post('/login', userCtrl.login)
-router.put('/update/:id', auth, multer, userCtrl.update)
-router.put('/updatePassword/:id', auth, passwordValidator, userCtrl.updatePassword)
-router.delete('/delete/:id', auth, multer, userCtrl.delete)
-
+router.post ('/login', userCtrl.login)
+router.put ('/update/:id', auth, multer, userCtrl.update)
+router.put ('/updatePassword/:id', auth, passwordValidator, userCtrl.updatePassword)
+router.delete ('/delete/:id', auth, multer, userCtrl.delete)
+router.get ('/', auth, userCtrl.getAllUsers)
 module.exports = router
