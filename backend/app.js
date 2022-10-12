@@ -39,9 +39,13 @@ app.use((req, res, next) => {
 app.use(helmet({ crossOriginResourcePolicy: false }))
 app.use(mongoSanitize())
 
-
+//appel des routes
 app.use('/api/auth', userRoutes)
 app.use('/api/posts', postRoutes)
 app.use('/api/comments', commentRoutes)
 app.use('/api/likes', likeRoutes)
+//déclaration des dossiers de stockage  dans la fonction express static
+app.use('/assets/attachments', express.static(path.join(__dirname, 'assets/attachments')))
+app.use('/assets/avatars', express.static(path.join(__dirname, 'assets/avatars')))
+
 module.exports = app

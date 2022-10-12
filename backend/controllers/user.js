@@ -15,6 +15,7 @@ const keyToken = process.env.KEY_TOKEN
 //fonction de création d'un compte
 exports.signup = (req, res) => {
     console.log(req.body)
+    console.log(req.files)
     const { email, password, firstname, lastname } = req.body
     //controle si formulaire entierement rempli
     if (!email || !password || !firstname || !lastname)
@@ -23,7 +24,8 @@ exports.signup = (req, res) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             // renommage image fourni par l'utilisateur, sinon vide
-            const avatar = req.file ? `${req.protocol}://${req.get('host')}/assets/avatars/${req.file.filename}` : ""
+            const file = req.files ? req.files[0] : undefined
+            const avatar = file ? `${req.protocol}://${req.get('host')}/assets/avatars/${file.filename}` : ""
             //déclaration de l'ojet à retourner à la base de donnée
             const user = ({
                 email: email,
