@@ -26,7 +26,7 @@ export default {
       postService.createPost(bodyPost)
         .then(res => {
           alert("message envoyé")
-          window.location.reload() 
+          this.$store.dispatch('getAllPosts')
         })
         .catch(error => console.log(error.response.data))
       },
