@@ -9,7 +9,7 @@ const mysql = require('../db.mysql')
 // fonction d'affichage des commentaires existants
 exports.getComments = (req, res) => {
     mysql.query(
-        'SELECT * FROM comments WHERE post_id = ? ORDER BY comments.id', req.params.post, (error, result) => {
+        'SELECT * FROM comments JOIN users ON user_id = users.id WHERE post_id = ?', req.params.post, (error, result) => {
             if (error) {
                 res.status(400).json({ error })
             } else {
@@ -22,7 +22,7 @@ exports.getComments = (req, res) => {
 exports.createComment = (req, res) => {
     // définition des champs à remplir
     const comment = {
-        content: req.body.content,
+        feedback: req.body.feedback,
         user_id: req.auth.userId,
         post_id: req.params.post
     }
@@ -33,7 +33,7 @@ exports.createComment = (req, res) => {
             if (!result[0]) res.status(401).json({ message: "l'utilisateur n'est pas présent dans la base" })
             //vérification si le post existe
             mysql.query(
-                'SELECT * FROM posts WHERE id = ? ', req.params.post, (error, result) => {
+                'SELECT * FROM posts WHERE postId = ? ', req.params.post, (error, result) => {
                     if (error) res.status(400).json({ error })
                     if (!result[0]) return res.status(401).json({ message: "le post n'existe pas dans la base" })
                     //requête de creation
@@ -58,7 +58,7 @@ exports.modifyComment = (req, res) => {
                 if (result[0].user_id == req.auth.userId || req.auth.admin == 1) {
                     //moodification du commentaire
                     mysql.query(
-                        'UPDATE comments SET content = ? WHERE id = ? ', [req.body.content,req.params.id], (error) => {
+                        'UPDATE comments SET comment = ? WHERE id = ? ', [req.body.feedback , req.params.id], (error) => {
                             if (error) res.status(400).json({ error })
                             res.status(200).json({ message: "commentaire modifié" })
                         }

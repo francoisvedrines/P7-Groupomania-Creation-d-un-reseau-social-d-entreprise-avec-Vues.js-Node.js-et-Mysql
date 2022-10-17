@@ -15,7 +15,7 @@ const keyToken = process.env.KEY_TOKEN
 //fonction de création d'un compte
 exports.signup = (req, res) => {
     console.log(req.body)
-    console.log(req.files)
+    console.log(req.file)
     const { email, password, firstname, lastname } = req.body
     //controle si formulaire entierement rempli
     if (!email || !password || !firstname || !lastname)
@@ -24,16 +24,15 @@ exports.signup = (req, res) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             // renommage image fourni par l'utilisateur, sinon vide
-            const file = req.files ? req.files[0] : undefined
-            const avatar = file ? `${req.protocol}://${req.get('host')}/assets/avatars/${file.filename}` : ""
+            const avatar = req.file ? `${req.protocol}://${req.get('host')}/assets/avatars/${req.file.filename}` : ""
             //déclaration de l'ojet à retourner à la base de donnée
-            const user = ({
+            const user = {
                 email: email,
                 password: hash,
                 firstname: firstname,
                 lastname: lastname,
                 avatar: avatar
-            })
+            }
             //création de l'utilisateur dans la base 
             mysql.query(
                 'INSERT INTO users SET ?', user, (error) => {
@@ -92,6 +91,8 @@ exports.login = (req, res) => {
 //fonction de mise à jours des informations utilisateur
 exports.update = (req, res) => {
     const { firstname, lastname } = req.body
+    console.log(req.body)
+    console.log(req.file)
     mysql.query(
         //vérification que la fiche utilisateur existe dans la base
         'SELECT * FROM users WHERE id = ?', req.params.id, (error, result) => {
@@ -105,19 +106,19 @@ exports.update = (req, res) => {
                     let query = 'UPDATE users SET '
                     let params = []
 
+                    //déclaration d'un nouveau nom de fichier pour la nouvelle image
+                    const newAvatar = req.file ? `${req.protocol}://${req.get('host')}/assets/avatars/${req.file.filename}` : ""
+                    // personalisation de la rêquete mysql
+                    query = query + 'avatar = ?,'
+                    //ajouter de l'url du ficher dans un tableau
+                    params.push(newAvatar)
                     //si envoi d'une image
-                    if (req.file) {
-                        // si image déjà affectée à l'utilisateur, on procède a sa supression
+                    if (req.files) {
+                        // si image déjà affectée à l'utilisateur, on procède à sa supression
                         if (result[0].avatar != null) {
                             const avatarOld = result[0].avatar.split("/avatars/")[1]
                             fs.unlink(`${`assets/avatars/${avatarOld}`}`, () => { })
                         }
-                        //déclaration d'un nouveau nom de fichier pour la nouvelle image
-                        const newAvatar = `${req.protocol}://${req.get('host')}/assets/avatars/${req.file.filename}`
-                        // personalisation de la rêquete mysql
-                        query = query + 'avatar = ?,'
-                        //ajouter de l'url du ficher dans un tableau
-                        params.push(newAvatar)
                     }
                     //si l'utilisateur change son prénom
                     if (firstname) {
@@ -211,7 +212,20 @@ exports.delete = (req, res) => {
 // fonction d'affichage de tout les utilisateurs existants
 exports.getAllUsers = (req, res) => {
     mysql.query(
-        'SELECT * FROM users ORDER BY users.lastname ASC', (error, result) => {
+        'SELECT * FROM users ORDER BY users.lastname ASC',  (error, result) => {
+            if (error) {
+                res.status(400).json({ error })
+            } else {
+                res.status(200).json(result)
+            }
+        }
+    )
+}
+
+// fonction d'affichage de tout les utilisateurs existants
+exports.getUser = (req, res) => {
+    mysql.query(
+        'SELECT * FROM users WHERE id = ?', [req.params.id], (error, result) => {
             if (error) {
                 res.status(400).json({ error })
             } else {

@@ -8,9 +8,10 @@ const mysql = require('../db.mysql')
 
 
 // fonction d'affichage de tout les posts existants
-exports.getAllPosts = (req, res) => {
+exports.getAllPosts = (req, res) => { 
+    
     mysql.query(
-        'SELECT * FROM posts JOIN users WHERE users.id=user_id ORDER BY datetime DESC LIMIT 50', (error, result) => {
+        'SELECT * FROM posts INNER JOIN users ON posts.user_id = users.id ORDER  BY datetime DESC LIMIT 50', (error, result) => {
             if (error) {
                 res.status(400).json({ error })
             } else {
@@ -23,14 +24,14 @@ exports.getAllPosts = (req, res) => {
 
 // fonction de création d'un post
 exports.createPost = (req, res) => {
-
     // renommage image fourni par l'utilisateur, sinon vide
     const attachment = req.file ? `${req.protocol}://${req.get('host')}/assets/attachments/${req.file.filename}` : ""
     // définition des champs pour envoi a la base de donnée
+    console.log(attachment)
     const post = {
         user_id: req.auth.userId,
         title: req.body.title,
-        content: req.body.content,
+        message: req.body.message,
         attachment: attachment,
         datetime: new Date().toLocaleString("af-ZA", { timeZone: "Europe/Paris" })
     }
@@ -55,7 +56,7 @@ exports.createPost = (req, res) => {
 //fonction suppression d'un post
 exports.deletePost = (req, res) => {
     mysql.query(
-        `SELECT * FROM posts WHERE id = ?`, req.params.id, (error, result) => {
+        `SELECT * FROM posts WHERE postId = ?`, req.params.id, (error, result) => {
             if (error) res.status(400).json({ error })
             if (!result[0]) res.status(404).json({ message: 'post inexistant' })
             else {
@@ -67,7 +68,7 @@ exports.deletePost = (req, res) => {
                         fs.unlink(`${`assets/attachments/${attachment}`}`, () => { })
                     }
                     mysql.query(
-                        `DELETE FROM posts WHERE id = ?`, req.params.id, (error) => {
+                        `DELETE FROM posts WHERE postId = ?`, req.params.id, (error) => {
                             if (error) res.status(400).json({ error })
                             res.status(200).json({ message: 'post supprimé' })
                         }
@@ -85,41 +86,42 @@ exports.modifyPost = (req, res) => {
     let params = []
     mysql.query(
         //selection du post
-        `SELECT * FROM posts WHERE id = ?`, req.params.id, (error, result) => {
+        `SELECT * FROM posts WHERE postId = ?`, req.params.id, (error, result) => {
             if (error) res.status(400).json({ error })
             if (!result[0]) res.status(404).json({ message: 'post inexistant' })
             else {
                 //vérification si auteur ou admin
                 if (result[0].user_id == req.auth.userId || req.auth.admin == 1) {
                     // si envoi d'une image
+                    //déclaration d'un nouveau nom de fichier pour la nouvelle image
+                    const newAttachment = req.file ? `${req.protocol}://${req.get('host')}/assets/attachments/${req.file.filename}` : ""
+                    // personalisation de la rêquete mysql
+                    query = query + 'attachment = ?,'
+                    //ajouter de l'url du ficher dans un tableau
+                    params.push(newAttachment)
                     if (req.file) {
+                        console.log(req.file)
                         // si image déjà affectée au post, on procède à sa supression
                         if (result[0].attachment != null) {
                             const oldAttachment = result[0].attachment.split('/attachments/')[1]
                             fs.unlink(`${`assets/attachments/${oldAttachment}`}`, () => { })
                         }
-                        //déclaration d'un nouveau nom de fichier pour la nouvelle image
-                        const newAttachment = `${req.protocol}://${req.get('host')}/assets/attachments/${req.file.filename}`
-                        // personalisation de la rêquete mysql
-                        query = query + 'attachment = ?,'
-                        //ajouter de l'url du ficher dans un tableau
-                        params.push(newAttachment)
                     }
-                    const { title, content } = req.body
+                    const { title, message } = req.body
                     //si l'utilisateur change le titre
                     if (title) {
                         query = query + 'title = ?,'
                         params.push(title)
                     }
                     //si l'utilisateur change le texte
-                    if (content) {
-                        query = query + 'content = ?,'
-                        params.push(content)
+                    if (message) {
+                        query = query + 'message = ?,'
+                        params.push(message)
                     }
                     //concaténation pour la finaliser "l'assemblage" de la requête en enlevant la dernière virgule présente dans le tableau
                     const datetime = new Date().toLocaleString("af-ZA", { timeZone: "Europe/Paris" })
                     query = query + 'datetime = ?,'
-                    query = query.substring(0, query.length - 1) + ' where id = ? '
+                    query = query.substring(0, query.length - 1) + ' where postId = ? '
                     params.push(datetime, req.params.id)
 
                     //envoi de la requête a la base de donnée
