@@ -106,14 +106,14 @@ exports.update = (req, res) => {
                     let query = 'UPDATE users SET '
                     let params = []
 
-                    //déclaration d'un nouveau nom de fichier pour la nouvelle image
-                    const newAvatar = req.file ? `${req.protocol}://${req.get('host')}/assets/avatars/${req.file.filename}` : ""
-                    // personalisation de la rêquete mysql
-                    query = query + 'avatar = ?,'
-                    //ajouter de l'url du ficher dans un tableau
-                    params.push(newAvatar)
                     //si envoi d'une image
-                    if (req.files) {
+                    if (req.file) {
+                        // personalisation de la rêquete mysql
+                        query = query + 'avatar = ?,'
+                        //déclaration d'un nouveau nom de fichier pour la nouvelle image
+                        const newAvatar = `${req.protocol}://${req.get('host')}/assets/avatars/${req.file.filename}` 
+                        //ajouter de l'url du ficher dans un tableau
+                        params.push(newAvatar)
                         // si image déjà affectée à l'utilisateur, on procède à sa supression
                         if (result[0].avatar != null) {
                             const avatarOld = result[0].avatar.split("/avatars/")[1]
@@ -155,7 +155,7 @@ exports.updatePassword = (req, res) => {
             }
             //vérification si auteur ou admin
             if (result[0].id == req.auth.userId || req.auth.admin == 1) {
-                if (password) {
+                if (req.body.password) {
                     //cryptage du nouveau mot de passe
                     bcrypt.hash(req.body.password, 10)
                         .then(hash => {

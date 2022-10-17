@@ -11,11 +11,7 @@ export default {
             email:""
         }
     },
-    mounted() {
-        userService.getAllUsers()
-            .then(res => this.users = res.data)
-            .catch(err => console.log(err))
-    },
+    
     computed: {
         ...mapGetters(['user'])
     },
@@ -30,12 +26,14 @@ export default {
             const bodyUser = new FormData()
             bodyUser.append('firstname', this.firstname)
             bodyUser.append('lastname', this.lastname)
+            console.log(this.avatar)
             bodyUser.append('avatar', this.avatar)
+            
             // requête axios pour envoi a la base de données
             userService.updateUser(bodyUser, this.user.id)
                 .then(res => {
                     alert("profil enregistré")
-                    window.location.reload()
+                    this.$store.dispatch('getUserById')
                 })
                 .catch(error => console.log(error.response.data))
         },

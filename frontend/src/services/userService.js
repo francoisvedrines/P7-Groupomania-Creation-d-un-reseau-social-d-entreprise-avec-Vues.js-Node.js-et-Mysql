@@ -17,8 +17,13 @@ const getUserById = (id) => {
 const updateUser = (data, id) => {
     return Axios.put(`/auth/profile/${id}`, data)
 }
+
+const updatePassword = (password, id) => {
+    return Axios.put(`/auth/password/${id}`, password)
+}
 export const userService = {
     getAllUsers,
     getUserById,
-    updateUser
+    updateUser,
+    updatePassword
 }
