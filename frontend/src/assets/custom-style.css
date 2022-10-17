@@ -1,0 +1,72 @@
+/* importation du cdn de bootstrap icons */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css");
+
+:root {
+    --color-primary: #FD2D01;
+    --color-secondary: #FFD7D7;
+    --color-tertiary: #4E5166;
+
+}
+
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+
+html, body {
+    height: 100%;
+}
+
+
+header > h1 {
+    font-size: 1.5rem;
+}
+
+h1 {
+    color: var(--color-primary)
+}
+
+
+h2 ,h3, h4, h5, h6 , label {
+    color: var(--color-tertiary);
+}
+
+.form-sign {
+    width: 100%;
+    max-width: 350px;
+    padding: 15px;
+    margin: auto;
+}
+
+
+
+.form-sign input {
+    margin-bottom: 3px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+article .btn.button-color {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+article .btn.button-color:hover {
+    background-color: var(--color-secondary);
+    color: black;
+}
+
+.avatar{
+    width: 6rem;
+    height: 6rem;
+}
