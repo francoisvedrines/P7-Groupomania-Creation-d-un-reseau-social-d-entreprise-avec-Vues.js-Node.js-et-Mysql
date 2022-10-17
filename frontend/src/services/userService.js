@@ -11,10 +11,14 @@ const getAllUsers = () => {
 }
 
 const getUserById = (id) => {
-    return Axios.get('/auth/profile/' + id)
+    return Axios.get(`/auth/profile/${id}`)
 }
 
+const updateUser = (data, id) => {
+    return Axios.put(`/auth/profile/${id}`, data)
+}
 export const userService = {
     getAllUsers,
-    getUserById
+    getUserById,
+    updateUser
 }

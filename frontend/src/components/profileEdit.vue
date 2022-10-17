@@ -1,11 +1,14 @@
 <script>
 import { userService } from '@/services'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
     name: 'ProfileEdit',
     data() {
         return {
-            users: []
+            users: [],
+            firstname: "",
+            lastname: "",
+            email:""
         }
     },
     mounted() {
@@ -13,8 +16,29 @@ export default {
             .then(res => this.users = res.data)
             .catch(err => console.log(err))
     },
-    computed:{
-    ...mapGetters(['user'])
+    computed: {
+        ...mapGetters(['user'])
+    },
+    methods: {
+        //lors de l'événement onchange (selection d'un fichier), enregistrement de ce fichier dans une variable
+        fileSelectPost(event) {
+            this.avatar = event.target.files[0]
+        },
+        //méthode pour l'enregistrement des nouvelles informations au clic du bouton
+        Submit() {
+            //déclaration du body au format formdata
+            const bodyUser = new FormData()
+            bodyUser.append('firstname', this.firstname)
+            bodyUser.append('lastname', this.lastname)
+            bodyUser.append('avatar', this.avatar)
+            // requête axios pour envoi a la base de données
+            userService.updateUser(bodyUser, this.user.id)
+                .then(res => {
+                    alert("profil enregistré")
+                    window.location.reload()
+                })
+                .catch(error => console.log(error.response.data))
+        },
     }
 }
 
@@ -33,7 +57,7 @@ export default {
                         <h6 class="mb-0">Prénom</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                        <input type="text" class="form-control" :value="`${user.firstname}`">
+                        <input  v-model="firstname" type="text" class="form-control" placeholder="Prénom...">
                     </div>
                 </section>
                 <section class="row mb-3">
@@ -41,29 +65,21 @@ export default {
                         <h6 class="mb-0">Nom</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                        <input type="text" class="form-control" :value="`${user.lastname}`">
+                        <input v-model="lastname" type="text" class="form-control" placeholder="Nom..." >
                     </div>
                 </section>
-                <section class="row mb-3">
-                    <div class="col-sm-3">
-                        <h6 class="mb-0">Email</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                        <input type="text" class="form-control" :value="`${user.email}`">
-                    </div>
-                </section>
-                <section class="mb-5">
+                <section class="my-5">
                     <div class="d-flex">
                         <i class="bi bi-person-bounding-box"></i>
                         <label for="formFile" class="mx-1 d-block form-label">Modifier l'avatar</label>
                     </div>
                     <div class="d-flex">
-                        <input class=" form-control form-control-sm input-file" id="formFile" type="file">
+                        <input  v-on:change="fileSelectPost" class=" form-control form-control-sm input-file" id="formFile" type="file">
                     </div>
                 </section>
                 <div class="row">
                     <div class="col-sm-9">
-                        <input type="button" class="btn button-color px-4" value="Enregistrer">
+                        <input @click="Submit()" type="button" class="btn button-color px-4" value="Enregistrer">
                     </div>
                 </div>
             </div>
