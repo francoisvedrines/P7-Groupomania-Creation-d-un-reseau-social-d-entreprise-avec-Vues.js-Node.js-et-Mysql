@@ -14,9 +14,9 @@ exports.like = (req, res) => {
             if (result == '') {
                 mysql.query(
                     //ajoute +1 au nombre de like de la table post
-                    "UPDATE posts SET like_count = like_count + 1 WHERE id = ?", req.params.post, (error) => {
+                    "UPDATE posts SET like_count = like_count + 1 WHERE postId = ?", req.params.post, (error) => {
                         if (error) res.status(400).json({ error })
-                        // enregistrment dans la table like de l'id utilisateur et l'id du post
+                        // enregistrement dans la table like de l'id utilisateur et l'id du post
                         mysql.query(
                             `INSERT INTO likes (post_id, user_id) VALUES (?,?)`, [req.params.post, req.auth.userId], (error) => {
                                 if (error) res.status(400).json({ error })
@@ -26,7 +26,7 @@ exports.like = (req, res) => {
             } else {
                 //si l'utilisateur a déjà liké, alors retrait du like
                 mysql.query(
-                    "UPDATE posts SET like_count = like_count - 1 WHERE id = ?", req.params.post, (error) => {
+                    "UPDATE posts SET like_count = like_count - 1 WHERE postId = ?", req.params.post, (error) => {
                         if (error) res.status(400).json({ error })
                         // supression dans la table like de l'id utilisateur et l'id du post
                         mysql.query(

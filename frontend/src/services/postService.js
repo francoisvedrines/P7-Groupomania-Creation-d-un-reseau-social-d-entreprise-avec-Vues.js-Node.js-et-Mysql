@@ -5,7 +5,6 @@ import Axios from './callerService'
 /************** Requêtes des posts *************** */
 
 
-//requête pour obtenir tout les posts sur la page d'accueil
 const getAllPosts = () => {
     return Axios.get('/posts')
 }
@@ -24,11 +23,16 @@ const createComment = (feedback, id) => {
     return Axios.post(`/comments/${id}`, feedback)
 }
 
+const likedPost = (id) => {
+    return Axios.post(`/likes/${id}`)
+}
+
 
 export const postService = {
     getAllPosts,
     createPost,
     deletePost,
     getComments,
-    createComment
+    createComment,
+    likedPost
 }

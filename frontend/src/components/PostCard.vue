@@ -13,27 +13,34 @@ export default {
             content: "",
             attachment: "",
             comments: [],
-            comment:{},
+            comment: {},
             id: ""
         }
     },
     components: {
-    PostComment,
-    PostCreateComment
-},
+        PostComment,
+        PostCreateComment
+    },
     props: {
         post: {},
-        posts:[],
-    
+        posts: [],
+
     },
     mounted() {
         const id = this.post.postId
         postService.getComments(id)
-        .then(res => this.comments = res.data)
+            .then(res => this.comments = res.data)
     },
-    computed:{
-        
-  }
+    methods: {
+        Liked() {
+            postService.likedPost(this.post.postId)
+                .then(res => {
+                    console.log(res)
+                    this.$store.dispatch('getAllPosts')
+                })
+                .catch(error => console.log(error))
+        }
+    }
 
 }
 
@@ -62,11 +69,15 @@ export default {
                 </div>
                 <img :src="post.attachment" class="card-img-bottom" alt="image du post" v-if="!!post.attachment">
             </div>
+            <button @click="Liked" id="like" class="mx-3 btn btn-outline-light">
+                <i class="bi bi-heart-fill"></i>
+                <span class="ms-1 count badge border"> {{post.like_count}} j'aime</span>
+            </button>
         </article>
 
-        <PostComment v-for="comment in comments" :key="comment.id" :comment="comment"/>
+        <PostComment v-for="comment in comments" :key="comment.id" :comment="comment" />
 
-        <PostCreateComment :post="post" :comment="comment"/>
+        <PostCreateComment :post="post" :comment="comment" />
 
     </div>
 
