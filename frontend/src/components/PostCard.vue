@@ -14,7 +14,8 @@ export default {
             attachment: "",
             comments: [],
             comment: {},
-            id: ""
+            id: "",
+            userId: "",
         }
     },
     components: {
@@ -33,15 +34,23 @@ export default {
     },
     methods: {
         Liked() {
-            postService.likedPost(this.post.postId)
+            const id = this.post.postId
+            console.log(id)
+            postService.likedPost(id)
                 .then(res => {
-                    console.log(res)
                     this.$store.dispatch('getAllPosts')
                 })
                 .catch(error => console.log(error))
+        },
+        DeletePost(){
+            if(confirm('Etes-vous sur de supprimer le post?'))
+            postService.deletePost(this.post.postId)
+            .then(res => {
+                this.$store.dispatch('getAllPosts')
+            })
         }
-    }
-
+    },
+    
 }
 
 </script>
@@ -51,8 +60,8 @@ export default {
     <div class="card mx-auto my-4 shadow-lg">
         <article id="display-post" class="card-body">
             <div
-                class="d-flex flex-wrap align-items-center mb-3 border shadow rounded title-background position-relative">
-                <i class="bi bi-trash-fill position-absolute top-0 start-100 translate-middle"></i>
+                class="d-flex flex-wrap align-items-center mb-3 border shadow rounded title-background position-relative" >
+                <i class="bi bi-trash-fill position-absolute top-0 start-100 translate-middle" role="button" @click="DeletePost"></i>
                 <div>
                     <img class="rounded-circle avatar p-2 mx-auto" v-if="!!post.avatar" :src="post.avatar">
                     <p class="card-title m-1 name-user">{{ post.firstname }} {{ post.lastname }} </p>
@@ -64,7 +73,7 @@ export default {
             </div>
             <div class="position-relative rounded shadow-lg">
                 <div class="border rounded my-2">
-                    <i class="bi bi-pencil-square position-absolute top-0 start-100 translate-middle"></i>
+                    <i class="bi bi-pencil-square position-absolute top-0 start-100 translate-middle" role="button"></i>
                     <p class="card-text mx-1 py-3">{{ post.message }}</p>
                 </div>
                 <img :src="post.attachment" class="card-img-bottom" alt="image du post" v-if="!!post.attachment">

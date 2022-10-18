@@ -93,14 +93,14 @@ exports.modifyPost = (req, res) => {
                 //vérification si auteur ou admin
                 if (result[0].user_id == req.auth.userId || req.auth.admin == 1) {
                     // si envoi d'une image
-                    //déclaration d'un nouveau nom de fichier pour la nouvelle image
-                    const newAttachment = req.file ? `${req.protocol}://${req.get('host')}/assets/attachments/${req.file.filename}` : ""
-                    // personalisation de la rêquete mysql
-                    query = query + 'attachment = ?,'
-                    //ajouter de l'url du ficher dans un tableau
-                    params.push(newAttachment)
                     if (req.file) {
                         console.log(req.file)
+                        //déclaration d'un nouveau nom de fichier pour la nouvelle image
+                        const newAttachment = `${req.protocol}://${req.get('host')}/assets/attachments/${req.file.filename}`
+                        // personalisation de la rêquete mysql
+                        query = query + 'attachment = ?,'
+                        //ajouter de l'url du ficher dans un tableau
+                        params.push(newAttachment)
                         // si image déjà affectée au post, on procède à sa supression
                         if (result[0].attachment != null) {
                             const oldAttachment = result[0].attachment.split('/attachments/')[1]

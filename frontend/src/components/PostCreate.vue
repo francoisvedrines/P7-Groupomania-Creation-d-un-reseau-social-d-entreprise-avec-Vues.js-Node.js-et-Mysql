@@ -25,7 +25,6 @@ export default {
       // requête axios pour envoi a la base de données
       postService.createPost(bodyPost)
         .then(res => {
-          alert("message envoyé")
           this.$store.dispatch('getAllPosts')
         })
         .catch(error => console.log(error.response.data))
@@ -38,19 +37,19 @@ export default {
 
   <article>
     <div>
+      <h3>Nouveau message :</h3>
       <label for="inputTitle"> Titre</label>
       <input type="text" id="inputTitle" class="form-control shadow-sm" placeholder="Donnez un titre ..."
-        aria-label="titre" v-model="title" required>
+        aria-label="titre" v-model="title">
       <label for="inputContent"> Que voulez-vous dire ?</label>
-      <textarea class="form-control shadow-sm" id="inputPost" placeholder="Commencez à écrire ici" v-model="message"
-        required></textarea>
+      <textarea class="form-control shadow-sm" id="inputPost" placeholder="Commencez à écrire ici" v-model="message"></textarea>
     </div>
     <div class="mt-1">
       <label for="formFile " class="d-block form-label">Joindre une image</label>
       <div class="d-flex">
         <input class=" form-control form-control-sm input-file shadow-sm" id="formFile" type="file"
           v-on:change="fileSelectPost">
-        <button type="submit" class="d-inline btn button-color btn-sm ms-auto" @click="Publish()">Envoyer </button>
+        <input type="submit" class="d-inline btn button-color btn-sm ms-auto" value="Envoyer" @click="Publish()">
       </div>
     </div>
   </article>

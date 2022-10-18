@@ -1,5 +1,5 @@
 <script>
-
+import { postService } from '@/services'
 
 export default {
     name: 'PostComment',
@@ -9,6 +9,16 @@ export default {
         comment: {},
         
     },
+    methods: {
+        DeleteComment(){
+            console.log(this.comment)
+            if(confirm('Etes-vous sur de supprimer le commentaire?'))
+            postService.deleteComment(this.comment.commentId)
+            .then(res => {
+                console.log(res)
+            })
+        }
+    }
 }
 
 </script>
@@ -24,8 +34,8 @@ export default {
             </div>
             <div class="me-1">
                 <p class="mx-2 card-title fst-italic"> {{comment.feedback}} </p>
-                <i class="bi bi-pencil-square position-absolute top-100 start-0 translate-middle"></i>
-                <i class="bi bi-trash-fill position-absolute top-100 start-100 translate-middle"></i>
+                <i class="bi bi-pencil-square position-absolute top-100 start-0 translate-middle" role="button"></i>
+                <i class="bi bi-trash-fill position-absolute top-100 start-100 translate-middle" role="button" @click="DeleteComment"></i>
             </div>
         </div>
     </section>

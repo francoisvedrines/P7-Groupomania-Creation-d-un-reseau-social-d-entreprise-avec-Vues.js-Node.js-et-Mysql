@@ -50,7 +50,7 @@ exports.createComment = (req, res) => {
 exports.modifyComment = (req, res) => {
     //selection du commentaire
     mysql.query(
-        'SELECT * FROM comments WHERE id = ? ', req.params.id, (error, result) => {
+        'SELECT * FROM comments WHERE commentId = ? ', req.params.id, (error, result) => {
             if (error) res.status(400).json({ error })
             if (!result[0]) res.status(404).json({ message: 'post inexistant' })
             else {
@@ -58,7 +58,7 @@ exports.modifyComment = (req, res) => {
                 if (result[0].user_id == req.auth.userId || req.auth.admin == 1) {
                     //moodification du commentaire
                     mysql.query(
-                        'UPDATE comments SET comment = ? WHERE id = ? ', [req.body.feedback , req.params.id], (error) => {
+                        'UPDATE comments SET comment = ? WHERE commentId = ? ', [req.body.feedback , req.params.id], (error) => {
                             if (error) res.status(400).json({ error })
                             res.status(200).json({ message: "commentaire modifié" })
                         }
@@ -72,7 +72,7 @@ exports.modifyComment = (req, res) => {
 exports.deleteComment = (req, res) => {
     mysql.query(
         //recuperation du commentaire
-        `SELECT * from comments WHERE id = ?`, req.params.id, (error, result) => {
+        `SELECT * from comments WHERE commentId = ?`, req.params.id, (error, result) => {
             if (error) res.status(400).json({ error })
             if (!result[0]) res.status(404).json({ message: 'commentaire inexistant' })
             else {
@@ -80,7 +80,7 @@ exports.deleteComment = (req, res) => {
                 if (result[0].user_id == req.auth.userId || req.auth.admin == 1) {
                     // supréssion du commentaire
                     mysql.query(
-                        `DELETE from comments WHERE id =? `, req.params.id, (error) => {
+                        `DELETE from comments WHERE commentId =? `, req.params.id, (error) => {
                             if (error) res.status(400).json({ error })
                             res.status(200).json({ message: "commentaire supprimé" })
                         }
