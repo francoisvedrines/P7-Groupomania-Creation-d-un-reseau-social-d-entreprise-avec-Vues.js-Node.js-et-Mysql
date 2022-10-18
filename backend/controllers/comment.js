@@ -58,7 +58,7 @@ exports.modifyComment = (req, res) => {
                 if (result[0].user_id == req.auth.userId || req.auth.admin == 1) {
                     //moodification du commentaire
                     mysql.query(
-                        'UPDATE comments SET comment = ? WHERE commentId = ? ', [req.body.feedback , req.params.id], (error) => {
+                        'UPDATE comments SET feedback = ? WHERE commentId = ? ', [req.body.feedback , req.params.id], (error) => {
                             if (error) res.status(400).json({ error })
                             res.status(200).json({ message: "commentaire modifié" })
                         }

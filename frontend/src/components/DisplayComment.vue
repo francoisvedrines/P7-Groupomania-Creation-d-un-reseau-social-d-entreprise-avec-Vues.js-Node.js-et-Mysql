@@ -1,14 +1,22 @@
 <script>
 import { postService } from '@/services'
+import ModalCommentUpdate from '@/components/modalUpdate/ModalCommentUpdate.vue';
 
 export default {
-    name: 'PostComment',
+    name: 'DisplayComment',
+    data () {
+        return{
+            revealUpdate: false,
+        }
+    },
     props: {
         post: {},
         posts: [],
         comment: {},
-        
     },
+    components: {
+    ModalCommentUpdate
+},
     methods: {
         DeleteComment(){
             console.log(this.comment)
@@ -17,6 +25,9 @@ export default {
             .then(res => {
                 console.log(res)
             })
+        },
+        ToggleModal(){
+            this.revealUpdate = !this.revealUpdate
         }
     }
 }
@@ -34,13 +45,13 @@ export default {
             </div>
             <div class="me-1">
                 <p class="mx-2 card-title fst-italic"> {{comment.feedback}} </p>
-                <i class="bi bi-pencil-square position-absolute top-100 start-0 translate-middle" role="button"></i>
+                <i class="bi bi-pencil-square position-absolute top-100 start-0 translate-middle" role="button" @click="ToggleModal"></i>
                 <i class="bi bi-trash-fill position-absolute top-100 start-100 translate-middle" role="button" @click="DeleteComment"></i>
             </div>
         </div>
     </section>
 
-   
+   <ModalCommentUpdate :comment="comment" :revealUpdate="revealUpdate" :ToggleModal="ToggleModal"/>
 
 </template>
 

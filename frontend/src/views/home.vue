@@ -2,7 +2,7 @@
 
 import HeaderMain from '@/components/headerMain.vue'
 import PostCreate from '@/components/PostCreate.vue'
-import PostCard from '@/components/PostCard.vue'
+import HomeCard from '@/components/HomeCard.vue'
 
 import {mapGetters} from 'vuex'
 //import des service axios pour les requêtes http
@@ -21,7 +21,7 @@ export default {
   components: {
     HeaderMain,
     PostCreate,
-    PostCard
+    HomeCard
   },
   beforeMount () {
     // récupération de l'utilisateur en cours dans le store
@@ -55,7 +55,7 @@ export default {
 
       <hr class="dropdow-divider mt-5">
 
-      <PostCard v-for="post in posts" :key="post.postId" :post="post" />
+      <HomeCard v-for="post in posts" :key="post.postId" :post="post" />
 
     </div>
   </main>

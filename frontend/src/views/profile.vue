@@ -1,5 +1,5 @@
 <script>
-
+import { userService, accountService} from '@/services'
 import HeaderMain from '@/components/headerMain.vue'
 import ProfileEdit from '@/components/ProfileEdit.vue'
 import ProfilePassword from '@/components/ProfilePassword.vue'
@@ -16,6 +16,16 @@ export default {
     computed: {
         ...mapGetters(['user'])
 
+    },
+    methods: {
+        DeleteUser() {
+            if (confirm('Etes-vous sur de supprimer votre compte?'))
+                userService.deleteUser(this.user.id)
+                    .then(res => {
+                        accountService.logout()
+                        this.$router.push("/login")
+                    })
+        }
     }
 }
 
@@ -50,7 +60,7 @@ export default {
 
             </div>
             <article>
-                <input type="button" class="btn button-color my-5 " value="Supprimer le compte">
+                <input @click="DeleteUser()" type="button" class="btn button-color my-5 " value="Supprimer le compte">
             </article>
         </div>
     </div>

@@ -3,7 +3,7 @@
 import { postService } from '@/services'
 
 export default {
-    name: 'PostCreateComment',
+    name: 'CreateComment',
     default() {
         return {
             feedback:"",

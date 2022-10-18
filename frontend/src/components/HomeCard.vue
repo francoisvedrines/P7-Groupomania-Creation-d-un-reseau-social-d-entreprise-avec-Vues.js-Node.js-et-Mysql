@@ -1,12 +1,15 @@
 <script>
 
 import { postService } from '@/services'
-import PostComment from '@/components/PostComment.vue';
-import PostCreateComment from '@/components/PostCreateComment.vue';
+import DisplayComment from '@/components/DisplayComment.vue';
+import CreateComment from '@/components/CreateComment.vue';
+import ModalPostUpdate from '@/components/modalUpdate/ModalPostUpdate.vue';
+
+
 
 
 export default {
-    name: "PostCard",
+    name: "HomeCard",
     data() {
         return {
             title: "",
@@ -16,16 +19,17 @@ export default {
             comment: {},
             id: "",
             userId: "",
+            revealUpdate: false,
         }
     },
     components: {
-        PostComment,
-        PostCreateComment
-    },
+    DisplayComment,
+    CreateComment,
+    ModalPostUpdate
+},
     props: {
         post: {},
         posts: [],
-
     },
     mounted() {
         const id = this.post.postId
@@ -48,6 +52,9 @@ export default {
             .then(res => {
                 this.$store.dispatch('getAllPosts')
             })
+        },
+        ToggleModal(){
+            this.revealUpdate = !this.revealUpdate
         }
     },
     
@@ -73,20 +80,23 @@ export default {
             </div>
             <div class="position-relative rounded shadow-lg">
                 <div class="border rounded my-2">
-                    <i class="bi bi-pencil-square position-absolute top-0 start-100 translate-middle" role="button"></i>
+                    <i class="bi bi-pencil-square position-absolute top-0 start-100 translate-middle" role="button" @click="ToggleModal"></i>
                     <p class="card-text mx-1 py-3">{{ post.message }}</p>
                 </div>
                 <img :src="post.attachment" class="card-img-bottom" alt="image du post" v-if="!!post.attachment">
             </div>
+
             <button @click="Liked" id="like" class="mx-3 btn btn-outline-light">
                 <i class="bi bi-heart-fill"></i>
                 <span class="ms-1 count badge border"> {{post.like_count}} j'aime</span>
             </button>
         </article>
 
-        <PostComment v-for="comment in comments" :key="comment.id" :comment="comment" />
+        <DisplayComment v-for="comment in comments" :key="comment.id" :comment="comment" />
 
-        <PostCreateComment :post="post" :comment="comment" />
+        <CreateComment :post="post" :comment="comment" />
+
+        <ModalPostUpdate :post="post" :revealUpdate="revealUpdate" :ToggleModal="ToggleModal" />
 
     </div>
 

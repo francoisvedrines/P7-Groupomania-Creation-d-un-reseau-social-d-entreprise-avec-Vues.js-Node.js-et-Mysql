@@ -12,7 +12,7 @@ const createPost = (post) => {
     return Axios.post('/posts', post)
 }
 const updatePost = (post, id) => {
-    return Axios.put(`/auth/profile/${id}`, post)
+    return Axios.put(`/posts/${id}`, post)
 }
 const deletePost = (id) => {
     return Axios.delete(`/posts/${id}`)
@@ -26,7 +26,7 @@ const createComment = (feedback, id) => {
     return Axios.post(`/comments/${id}`, feedback)
 }
 const updateComment = (feedback, id) => {
-    return Axios.put(`/auth/profile/${id}`, feedback)
+    return Axios.put(`/comments/${id}`, feedback)
 }
 const deleteComment = (id) => {
     return Axios.delete(`/comments/${id}`)
