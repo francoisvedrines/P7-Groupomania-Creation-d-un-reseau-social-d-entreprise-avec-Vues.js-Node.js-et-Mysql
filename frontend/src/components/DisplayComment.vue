@@ -1,6 +1,7 @@
 <script>
 import { postService } from '@/services'
-import ModalCommentUpdate from '@/components/modalUpdate/ModalCommentUpdate.vue';
+import ModalCommentUpdate from '@/components/modalUpdate/ModalCommentUpdate.vue'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'DisplayComment',
@@ -10,25 +11,33 @@ export default {
         }
     },
     props: {
-        post: {},
-        posts: [],
-        comment: {},
+        post: Object,
+        posts: Array,
+        comment: Object,
     },
     components: {
     ModalCommentUpdate
 },
     methods: {
+        //requête pour suppression d'un commentaire
         DeleteComment(){
-            console.log(this.comment)
             if(confirm('Etes-vous sur de supprimer le commentaire?'))
             postService.deleteComment(this.comment.commentId)
             .then(res => {
                 console.log(res)
             })
         },
+        // méthode pour afficher ou masquer la modale d'édition d'un commentaire
         ToggleModal(){
             this.revealUpdate = !this.revealUpdate
         }
+    },
+    computed:{
+        //contrôle si l'utilisateur est auteur ou administrateur pour l'authorisation d'édition
+        ...mapGetters(['userId', 'admin']),
+        author: function(){
+            return this.userId === this.comment.user_id || this.admin === 1
+        },
     }
 }
 
@@ -45,8 +54,8 @@ export default {
             </div>
             <div class="me-1">
                 <p class="mx-2 card-title fst-italic"> {{comment.feedback}} </p>
-                <i class="bi bi-pencil-square position-absolute top-100 start-0 translate-middle" role="button" @click="ToggleModal"></i>
-                <i class="bi bi-trash-fill position-absolute top-100 start-100 translate-middle" role="button" @click="DeleteComment"></i>
+                <i class="bi bi-pencil-square position-absolute top-100 start-0 translate-middle" role="button" v-if="author" @click="ToggleModal"></i>
+                <i class="bi bi-trash-fill position-absolute top-100 start-100 translate-middle" role="button" v-if="author" @click="DeleteComment"></i>
             </div>
         </div>
     </section>

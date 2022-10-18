@@ -1,10 +1,10 @@
 <script>
 
 import { postService } from '@/services'
-import DisplayComment from '@/components/DisplayComment.vue';
-import CreateComment from '@/components/CreateComment.vue';
-import ModalPostUpdate from '@/components/modalUpdate/ModalPostUpdate.vue';
-
+import DisplayComment from '@/components/DisplayComment.vue'
+import CreateComment from '@/components/CreateComment.vue'
+import ModalPostUpdate from '@/components/modalUpdate/ModalPostUpdate.vue'
+import { mapGetters } from 'vuex'
 
 
 
@@ -12,52 +12,58 @@ export default {
     name: "HomeCard",
     data() {
         return {
-            title: "",
-            content: "",
-            attachment: "",
-            comments: [],
-            comment: {},
-            id: "",
-            userId: "",
+            title: String,
+            content: String,
+            attachment: File,
+            comments: Array,
+            comment: Object,
+            id: Number,
             revealUpdate: false,
         }
     },
     components: {
-    DisplayComment,
-    CreateComment,
-    ModalPostUpdate
-},
+        DisplayComment,
+        CreateComment,
+        ModalPostUpdate
+    },
     props: {
-        post: {},
-        posts: [],
+        post: Object,
+        posts: Array,
     },
     mounted() {
-        const id = this.post.postId
-        postService.getComments(id)
+        // récupère la liste des commantaires au montage
+        postService.getComments(this.post.postId)
             .then(res => this.comments = res.data)
     },
     methods: {
+        //fonction incrémentation like et dislike
         Liked() {
-            const id = this.post.postId
-            console.log(id)
-            postService.likedPost(id)
+            postService.likedPost(this.post.postId)
                 .then(res => {
                     this.$store.dispatch('getAllPosts')
                 })
                 .catch(error => console.log(error))
         },
-        DeletePost(){
-            if(confirm('Etes-vous sur de supprimer le post?'))
-            postService.deletePost(this.post.postId)
-            .then(res => {
-                this.$store.dispatch('getAllPosts')
-            })
+        // requête pour supression d'un post
+        DeletePost() {
+            if (confirm('Etes-vous sur de supprimer le post?'))
+                postService.deletePost(this.post.postId)
+                    .then(res => {
+                        this.$store.dispatch('getAllPosts')
+                    })
         },
-        ToggleModal(){
+        //méthode pour afficher ou masquer la modale d'édition du post
+        ToggleModal() {
             this.revealUpdate = !this.revealUpdate
         }
     },
-    
+    computed:{
+        //contrôle si l'utilisateur est auteur ou administrateur pour l'authorisation d'édition
+        ...mapGetters(['userId', 'admin']),
+        author: function(){
+            return this.userId === this.post.user_id || this.admin === 1
+        }
+    }
 }
 
 </script>
@@ -67,8 +73,9 @@ export default {
     <div class="card mx-auto my-4 shadow-lg">
         <article id="display-post" class="card-body">
             <div
-                class="d-flex flex-wrap align-items-center mb-3 border shadow rounded title-background position-relative" >
-                <i class="bi bi-trash-fill position-absolute top-0 start-100 translate-middle" role="button" @click="DeletePost"></i>
+                class="d-flex flex-wrap align-items-center mb-3 border shadow rounded title-background position-relative">
+                <i class="bi bi-trash-fill position-absolute top-0 start-100 translate-middle" role="button"
+                   v-if="author" @click="DeletePost"></i>
                 <div>
                     <img class="rounded-circle avatar p-2 mx-auto" v-if="!!post.avatar" :src="post.avatar">
                     <p class="card-title m-1 name-user">{{ post.firstname }} {{ post.lastname }} </p>
@@ -80,7 +87,8 @@ export default {
             </div>
             <div class="position-relative rounded shadow-lg">
                 <div class="border rounded my-2">
-                    <i class="bi bi-pencil-square position-absolute top-0 start-100 translate-middle" role="button" @click="ToggleModal"></i>
+                    <i class="bi bi-pencil-square position-absolute top-0 start-100 translate-middle" role="button"
+                    v-if="author" @click="ToggleModal"></i>
                     <p class="card-text mx-1 py-3">{{ post.message }}</p>
                 </div>
                 <img :src="post.attachment" class="card-img-bottom" alt="image du post" v-if="!!post.attachment">
