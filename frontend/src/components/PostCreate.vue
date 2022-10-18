@@ -28,7 +28,12 @@ export default {
           this.$store.dispatch('getAllPosts')
         })
         .catch(error => console.log(error.response.data))
-      },
+    },
+    resize() {
+      let element = this.$refs["textarea"];
+      element.style.height = "18px";
+      element.style.height = element.scrollHeight + "px";
+    }
   },
 }
 </script>
@@ -42,7 +47,8 @@ export default {
       <input type="text" id="inputTitle" class="form-control shadow-sm" placeholder="Donnez un titre ..."
         aria-label="titre" v-model="title">
       <label for="inputContent"> Que voulez-vous dire ?</label>
-      <textarea class="form-control shadow-sm" id="inputPost" placeholder="Commencez à écrire ici" v-model="message"></textarea>
+      <textarea class="form-control shadow-sm" id="inputPost" placeholder="Commencez à écrire ici" @input="resize()"
+        ref="textarea" v-model="message"></textarea>
     </div>
     <div class="mt-1">
       <label for="formFile " class="d-block form-label">Joindre une image</label>

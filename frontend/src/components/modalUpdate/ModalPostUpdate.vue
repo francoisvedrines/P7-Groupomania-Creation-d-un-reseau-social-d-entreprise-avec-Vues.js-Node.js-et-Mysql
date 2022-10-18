@@ -32,6 +32,11 @@ export default {
                 })
                 .catch(error => console.log(error.response.data))
         },
+        resize() {
+            let element = this.$refs["textarea"];
+            element.style.height = "18px";
+            element.style.height = element.scrollHeight + "px";
+        }
     },
 }
 </script>
@@ -48,7 +53,7 @@ export default {
                 <input type="text" id="inputTitle" class="form-control shadow-sm" 
                     aria-label="titre" v-model="this.post.title">
                 <label for="inputContent"> Message</label>
-                <textarea class="form-control shadow-sm" id="inputPost"
+                <textarea class="form-control shadow-sm" id="inputPost" @input="resize()" ref="textarea"
                     v-model="this.post.message"></textarea>
             </div>
             <div class="mt-1">

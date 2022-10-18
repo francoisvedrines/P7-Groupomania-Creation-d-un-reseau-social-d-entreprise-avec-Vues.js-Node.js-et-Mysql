@@ -6,8 +6,9 @@ export default {
     name: 'CreateComment',
     default() {
         return {
-            feedback:"",
-            id: ""
+            feedback: "",
+            id: "",
+            input: ""
         }
     },
     props: {
@@ -24,12 +25,14 @@ export default {
                 })
                 .catch(error => console.log(error))
         },
+        resize() {
+            let element = this.$refs["textarea"];
+            element.style.height = "18px";
+            element.style.height = element.scrollHeight + "px";
+        }
 
 
     },
-    computed: {
-    }
-
 }
 
 </script>
@@ -39,7 +42,7 @@ export default {
 <template>
     <article id="creat-comment" class="d-flex m-3">
         <textarea class="form-control form-Comment shadow-sm" id="inputComment" placeholder="Commentez ..."
-            v-model="feedback"></textarea>
+            @input="resize()" ref="textarea" v-model="feedback"></textarea>
         <input type="button" class="btn button-color btn-sm my-auto ms-2" value="Envoyer" @click="Publish()">
     </article>
 
