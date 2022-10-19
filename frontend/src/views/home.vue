@@ -5,17 +5,14 @@ import PostCreate from '@/components/PostCreate.vue'
 import HomeCard from '@/components/HomeCard.vue'
 
 import {mapGetters} from 'vuex'
-//import des service axios pour les requêtes http
-import { postService, userService } from '@/services'
 
 export default {
   name: 'Home',
   data() {
     return {
-      title: "",
-      content: "",
-      attachment: "",
-      
+      title: String,
+      content: String,
+      attachment: String,
     }
   },
   components: {
@@ -31,10 +28,6 @@ export default {
     // récupération de tout les posts dans le store
     this.$store.dispatch('getAllPosts')
    
-  },
-  methods: {
-    
-        
   },
   computed:{
     ...mapGetters(['posts'])

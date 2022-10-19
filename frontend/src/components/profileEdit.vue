@@ -5,13 +5,10 @@ export default {
     name: 'ProfileEdit',
     data() {
         return {
-            users: [],
             firstname: "",
             lastname: "",
-            email:""
         }
     },
-    
     computed: {
         ...mapGetters(['user'])
     },
@@ -26,7 +23,6 @@ export default {
             const bodyUser = new FormData()
             bodyUser.append('firstname', this.firstname)
             bodyUser.append('lastname', this.lastname)
-            console.log(this.avatar)
             bodyUser.append('avatar', this.avatar)
             
             // requête axios pour envoi a la base de données
@@ -85,7 +81,3 @@ export default {
     </article>
 
 </template>
-
-<style>
-
-</style>

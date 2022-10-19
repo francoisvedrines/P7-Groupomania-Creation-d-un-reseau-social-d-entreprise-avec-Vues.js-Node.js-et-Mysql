@@ -12,7 +12,6 @@ export default {
       password: "",
       firstname: "",
       lastname: "",
-      avatar: {},
       //variable pour servire de bascule entre login et signup
       isLoginMode: true
     }
@@ -40,9 +39,10 @@ export default {
       //envois de la requête axios pour la  création d'un utilisateur 
       accountService.signup(body)
         .then(res => {
-          console.log(res)
+          alert("Le compte a été créé. Veuillez à présent vous connecter")
         })
         .catch(error => console.log(error.response.data))
+        this.isLoginMode = true
     },
     // méthode pour basculer de signin à signup, par défaut true =>> signin
     switchSign() {
@@ -70,13 +70,11 @@ export default {
       <form>
         <h2 class="mb-5 text-center">{{this.isLoginMode ? "S'identifier" : "S'inscrire"}}</h2>
         <div class="form-floating mb-2">
-          <input type="email" class="form-control" id="email-input" placeholder="nom@example.com" v-model="email" 
-            required>
+          <input type="email" class="form-control" id="email-input" placeholder="nom@example.com" v-model="email">
           <label for="email">Adresse mail</label>
         </div>
         <div class="form-floating mb-2">
-          <input type="password" class="form-control" id="password-input" placeholder="Mot de passe" v-model="password"
-            required>
+          <input type="password" class="form-control" id="password-input" placeholder="Mot de passe" v-model="password">
           <label for="password">Mot de passe</label>
         </div>
         <div class="form-floating mb-2" v-if="isLoginMode == false">
@@ -91,10 +89,10 @@ export default {
           <input type="file" class="form-control" id="avatar-input" placeholder="avatar" v-on:change="fileSelectAvatar">
           <label id="label-avatar" for="avatar">Avatar</label>
         </div>
-        <button v-if="isLoginMode == true" class="button-color w-100 btn btn-lg mt-5" type="submit"
-          @click.prevent="signIn()">Connexion</button>
-        <button v-else class="button-color w-100 btn btn-lg mt-5" type="submit"
-          @click.prevent="signUp()">Inscription</button>
+        <input v-if="isLoginMode == true" class="button-color w-100 btn btn-lg mt-5" type="submit" value="Connexion"
+          @click.prevent="signIn()">
+        <input v-else class="button-color w-100 btn btn-lg mt-5" type="submit" value="Inscription"
+          @click.prevent="signUp()">
         <p class="mt-5 mb-1">{{this.isLoginMode ? "Pas encore de compte?" : "Déjà inscrit?"}}
           <a href="" @click.prevent="switchSign()">{{this.isLoginMode ? "Créez un compte." : "Revenez à la page connexion."}}</a>
         </p>

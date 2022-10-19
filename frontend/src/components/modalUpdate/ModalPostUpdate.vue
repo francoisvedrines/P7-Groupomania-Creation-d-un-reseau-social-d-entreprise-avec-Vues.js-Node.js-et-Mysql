@@ -6,19 +6,22 @@ export default {
     name: 'ModalPostUpdate',
     data() {
         return {
-            title: "",
-            message: "",
-            postId: ""
+            title: String,
+            message: String,
+            postId: Number
         }
     },
-    props: ['post', 'revealUpdate','ToggleModal'],
+    props: {
+        post: Object,
+        revealUpdate: Boolean,
+        ToggleModal: Function
+    }, 
     methods: {
         //lors de l'événement onchange (selection d'un fichier), enregistrement de ce fichier dans une variable
         fileSelectPost(event) {
             this.attachment = event.target.files[0]
         },
-        
-        //méthode pour la publication d'un post au clic du bouton
+        //méthode pour l'enregistrement des modifications du post
         Publish() {
             console.log(this.post.postId)
             //déclaration du body au format formdata
@@ -32,6 +35,7 @@ export default {
                 })
                 .catch(error => console.log(error.response.data))
         },
+        //méthode de redimensionnement auto du textarea
         resize() {
             let element = this.$refs["textarea"];
             element.style.height = "18px";
@@ -69,36 +73,3 @@ export default {
     </article>
 
 </template>
-
-<style >
-.bloc-modal {
-    position: fixed;
-    top: 10%;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.overlay {
-    background-color: rgba(0, 0, 0, 0.6);
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-.modal {
-    padding: 10px;
-}
-.btn-modal {
-   position: absolute;
-    top : 10px;
-    right: 10px;
-}
-
-</style>

@@ -47,8 +47,8 @@ export default {
 
     <section id="display-comment">
         <p class="mx-3">Commentaires:</p>
-        <div class=" display-comment d-flex align-items-center m-3 border shadow-sm rounded position-relative">
-            <div class=" user-comment flex-column me-4">
+        <div class=" d-flex align-items-center m-3 border shadow-sm rounded position-relative">
+            <div class=" flex-column me-4">
                 <img class=" rounded-circle p-2 avatar" v-if="!!comment.avatar" :src="comment.avatar">
                 <p class="mx-2 card-title"> {{comment.firstname}} {{comment.lastname}}</p>
             </div>
@@ -64,13 +64,9 @@ export default {
 
 </template>
 
-<style>
-.display-comment {
-    min-height: 5rem;
-}
-.user-comment {
-    max-width: 8rem;
-}
+<style scoped>
+
+
 
 .user-comment .avatar{
     width: 4rem;

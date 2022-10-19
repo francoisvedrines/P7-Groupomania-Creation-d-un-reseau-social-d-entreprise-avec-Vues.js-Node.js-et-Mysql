@@ -15,7 +15,7 @@ export default {
     fileSelectPost(event) {
       this.attachment = event.target.files[0]
     },
-    //méthode pour la publication d'un post au clic du bouton
+    //méthode pour la publication d'un post 
     Publish() {
       //déclaration du body au format formdata
       const bodyPost = new FormData()
@@ -29,12 +29,13 @@ export default {
         })
         .catch(error => console.log(error.response.data))
     },
+    //méthode pour le redimensionnement auto du textarea
     resize() {
       let element = this.$refs["textarea"];
       element.style.height = "18px";
       element.style.height = element.scrollHeight + "px";
     }
-  },
+  }
 }
 </script>
 
@@ -45,7 +46,7 @@ export default {
       <h3>Nouveau message :</h3>
       <label for="inputTitle"> Titre</label>
       <input type="text" id="inputTitle" class="form-control shadow-sm" placeholder="Donnez un titre ..."
-        aria-label="titre" v-model="title">
+        aria-label="titre" v-model="this.title">
       <label for="inputContent"> Que voulez-vous dire ?</label>
       <textarea class="form-control shadow-sm" id="inputPost" placeholder="Commencez à écrire ici" @input="resize()"
         ref="textarea" v-model="message"></textarea>

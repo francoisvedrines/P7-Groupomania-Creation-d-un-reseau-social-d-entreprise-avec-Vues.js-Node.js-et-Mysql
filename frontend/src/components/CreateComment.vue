@@ -6,33 +6,29 @@ export default {
     name: 'CreateComment',
     default() {
         return {
-            feedback: "",
-            id: "",
-            input: ""
+            feedback: String,
+            id: Number
         }
     },
     props: {
-        post: {},
-
+        post: Object,
     },
     methods: {
+        // requête pour la création d'un commentaire
         Publish() {
-            const id = this.post.postId
-            postService.createComment({ 'feedback': this.feedback }, id)
+            postService.createComment({ "feedback": this.feedback }, this.post.postId)
                 .then(res => {
-                    console.log(res)
                     postService.getComments(id)
                 })
                 .catch(error => console.log(error))
         },
+        //méthode pour le redimensionement auto du textarea
         resize() {
             let element = this.$refs["textarea"];
             element.style.height = "18px";
             element.style.height = element.scrollHeight + "px";
         }
-
-
-    },
+    }
 }
 
 </script>

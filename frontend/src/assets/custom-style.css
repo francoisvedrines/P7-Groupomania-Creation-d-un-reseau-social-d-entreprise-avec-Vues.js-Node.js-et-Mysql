@@ -48,8 +48,6 @@ h2 ,h3, h4, h5, h6 , label {
     margin: auto;
 }
 
-
-
 .form-sign input {
     margin-bottom: 3px;
     border-bottom-right-radius: 0;
@@ -69,4 +67,44 @@ article .btn.button-color:hover {
 .avatar{
     width: 6rem;
     height: 6rem;
+}
+
+textarea {
+    max-height: 500px;
+}
+
+/******** modales  ***********/
+
+.bloc-modal {
+    position: fixed;
+    top: 5rem;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+    background-image: url(../../../public/logo.svg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position-y: bottom;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.modal {
+    padding: 10px;
+}
+.btn-modal {
+   position: absolute;
+    top : 10px;
+    right: 10px;
 }

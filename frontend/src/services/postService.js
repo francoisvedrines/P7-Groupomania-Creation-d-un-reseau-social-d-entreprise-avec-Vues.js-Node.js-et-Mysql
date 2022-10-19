@@ -4,7 +4,7 @@ import Axios from './callerService'
 /************************************************* */
 /************** Requêtes des posts *************** */
 
-
+//CRUD des posts
 const getAllPosts = () => {
     return Axios.get('/posts')
 }
@@ -18,7 +18,7 @@ const deletePost = (id) => {
     return Axios.delete(`/posts/${id}`)
 }
 
-
+//CRUD des commentaires
 const getComments = (id) => {
     return Axios.get(`/comments/${id}`)
 } 
@@ -32,7 +32,7 @@ const deleteComment = (id) => {
     return Axios.delete(`/comments/${id}`)
 }
 
-
+// creation du like et dislike
 const likedPost = (id) => {
     return Axios.post(`/likes/${id}`)
 }

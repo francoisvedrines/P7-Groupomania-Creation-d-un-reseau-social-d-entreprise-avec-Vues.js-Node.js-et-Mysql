@@ -28,7 +28,6 @@ const saveToken = (token) => {
 const getToken = () => {
     return localStorage.getItem('token')
 }
-
 //function de vérification si l'utilisateur est connecté. Recherche du token, retourne en réponse un booléen
 const isLogged = () => {
     return !!localStorage.getItem('token')
