@@ -40,3 +40,10 @@ exports.like = (req, res) => {
         })
 }
 
+exports.researchLike = (req, res) => {
+    mysql.query(
+        'SELECT * FROM likes WHERE user_id = ? AND post_id =?', [req.auth.userId, req.params.post], (error, result) => {
+            if (error) res.status(400).json({ error })
+            if (result) res.status(200).json({ result })
+        })
+}
