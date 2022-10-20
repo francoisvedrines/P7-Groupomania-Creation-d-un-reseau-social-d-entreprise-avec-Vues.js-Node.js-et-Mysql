@@ -22,7 +22,7 @@ exports.getComments = (req, res) => {
 exports.createComment = (req, res) => {
     // définition des champs à remplir
     const comment = {
-        feedback: req.body.feedback,
+        message: req.body.message,
         user_id: req.auth.userId,
         post_id: req.params.post
     }
@@ -58,7 +58,7 @@ exports.modifyComment = (req, res) => {
                 if (result[0].user_id == req.auth.userId || req.auth.admin == 1) {
                     //moodification du commentaire
                     mysql.query(
-                        'UPDATE comments SET feedback = ? WHERE commentId = ? ', [req.body.feedback , req.params.id], (error) => {
+                        'UPDATE comments SET message = ? WHERE commentId = ? ', [req.body.message , req.params.id], (error) => {
                             if (error) res.status(400).json({ error })
                             res.status(200).json({ message: "commentaire modifié" })
                         }
