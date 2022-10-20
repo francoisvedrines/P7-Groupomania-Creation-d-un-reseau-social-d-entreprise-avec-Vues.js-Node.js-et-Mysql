@@ -1,8 +1,8 @@
 <script>
 
 import HeaderMain from '@/components/headerMain.vue'
-import PostCreate from '@/components/PostCreate.vue'
-import HomeCard from '@/components/HomeCard.vue'
+import CreatePost from '@/components/CreatePost.vue'
+import DisplayPost from '@/components/DisplayPost.vue'
 
 import {mapGetters} from 'vuex'
 
@@ -17,19 +17,20 @@ export default {
   },
   components: {
     HeaderMain,
-    PostCreate,
-    HomeCard
-  },
+    CreatePost,
+    DisplayPost
+},
   beforeMount () {
-    // récupération de l'utilisateur en cours dans le store
+    // déclenche la récupération de l'utilisateur en cours dans le store
     this.$store.dispatch('getUserById')
   },
   mounted() {
-    // récupération de tout les posts dans le store
+    //déclenche la récupération de tout les posts dans le store
     this.$store.dispatch('getAllPosts')
    
   },
   computed:{
+    //accès à la lecture du tableau posts du store
     ...mapGetters(['posts'])
     
   }
@@ -44,11 +45,12 @@ export default {
   <main>
     <div class="container">
 
-      <PostCreate />
+      <CreatePost />
 
       <hr class="dropdow-divider mt-5">
 
-      <HomeCard v-for="post in posts" :key="post.postId" :post="post" />
+      <DisplayPost v-for="post in posts" :key="post.postId" :post="post" />
+      
 
     </div>
   </main>

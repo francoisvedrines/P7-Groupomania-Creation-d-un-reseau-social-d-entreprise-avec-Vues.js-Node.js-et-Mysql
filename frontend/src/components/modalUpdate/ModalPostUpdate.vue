@@ -23,7 +23,7 @@ export default {
         },
         //méthode pour l'enregistrement des modifications du post
         Publish() {
-            console.log(this.post.postId)
+            
             //déclaration du body au format formdata
             const bodyPost = new FormData()
             bodyPost.append('title', this.post.title)
@@ -31,8 +31,7 @@ export default {
             bodyPost.append('attachment', this.attachment)
             // requête axios pour envoi a la base de données
             postService.updatePost(bodyPost, this.post.postId)
-                .then(res => {
-                })
+                .then(res => this.ToggleModal())
                 .catch(error => console.log(error.response.data))
         },
         //méthode de redimensionnement auto du textarea

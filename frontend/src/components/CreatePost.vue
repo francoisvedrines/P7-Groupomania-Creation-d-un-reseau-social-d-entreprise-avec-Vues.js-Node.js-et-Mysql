@@ -3,7 +3,7 @@
 import { postService } from '@/services'
 
 export default {
-  name: 'PostCreate',
+  name: 'CreatePost',
   data() {
     return {
       title: "",
@@ -26,6 +26,10 @@ export default {
       postService.createPost(bodyPost)
         .then(res => {
           this.$store.dispatch('getAllPosts')
+          //remise à zéro du formulaire
+          this.title = ""
+          this.message = ""
+          this.attachment = ""
         })
         .catch(error => console.log(error.response.data))
     },

@@ -6,7 +6,7 @@ export default {
     name: 'ModalCommentUpdate',
     default() {
         return {
-            feedback: String,
+            message: "",
             commentId: Number
         }
     },
@@ -18,11 +18,8 @@ export default {
     methods: {
         //méthode pour l'enregistrement des modifications du commentaire
         Publish() {
-            console.log(this.comment.feedback)
-            postService.updateComment({ 'feedback': this.comment.feedback }, this.comment.commentId)
-                .then(res => {
-                    console.log(res)
-                })
+            postService.updateComment({ 'message': this.comment.message }, this.comment.commentId)
+                .then(res =>  this.ToggleModal())
                 .catch(error => console.log(error))
         },
         //methode pour redimensionner le textarea
@@ -43,7 +40,7 @@ export default {
             <div class="btn-modal btn btn-danger" @click="ToggleModal">X</div>
             <p>Modification du commentaire :</p>
             <textarea class="form-control form-Comment shadow-sm" id="inputComment" @input="resize()" ref="textarea"
-                v-model="this.comment.feedback"></textarea>
+                v-model="this.comment.message"></textarea>
             <input type="button" class="btn button-color btn-sm my-auto ms-2" value="Envoyer" @click="Publish()">
         </div>
     </article>

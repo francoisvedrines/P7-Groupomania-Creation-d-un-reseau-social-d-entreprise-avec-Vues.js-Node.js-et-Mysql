@@ -6,8 +6,8 @@ export default {
     name: 'CreateComment',
     default() {
         return {
-            feedback: String,
-            id: Number
+            message: "",
+            id: Number,
         }
     },
     props: {
@@ -16,11 +16,11 @@ export default {
     methods: {
         // requête pour la création d'un commentaire
         Publish() {
-            postService.createComment({ "feedback": this.feedback }, this.post.postId)
+            postService.createComment({"message": this.message }, this.post.postId)
                 .then(res => {
-                    postService.getComments(id)
+                    postService.getComments(this.post.postId)
                 })
-                .catch(error => console.log(error))
+                
         },
         //méthode pour le redimensionement auto du textarea
         resize() {
@@ -38,7 +38,7 @@ export default {
 <template>
     <article id="creat-comment" class="d-flex m-3">
         <textarea class="form-control form-Comment shadow-sm" id="inputComment" placeholder="Commentez ..."
-            @input="resize()" ref="textarea" v-model="feedback"></textarea>
+            @input="resize()" ref="textarea" v-model="message"></textarea>
         <input type="button" class="btn button-color btn-sm my-auto ms-2" value="Envoyer" @click="Publish()">
     </article>
 

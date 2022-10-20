@@ -22,11 +22,11 @@ const deletePost = (id) => {
 const getComments = (id) => {
     return Axios.get(`/comments/${id}`)
 } 
-const createComment = (feedback, id) => {
-    return Axios.post(`/comments/${id}`, feedback)
+const createComment = (comment, id) => {
+    return Axios.post(`/comments/${id}`, comment)
 }
-const updateComment = (feedback, id) => {
-    return Axios.put(`/comments/${id}`, feedback)
+const updateComment = (comment, id) => {
+    return Axios.put(`/comments/${id}`, comment)
 }
 const deleteComment = (id) => {
     return Axios.delete(`/comments/${id}`)
@@ -35,6 +35,10 @@ const deleteComment = (id) => {
 // creation du like et dislike
 const likedPost = (id) => {
     return Axios.post(`/likes/${id}`)
+}
+//voir si like déja présent
+const searchLike = (id) => {
+    return Axios.get(`/likes/${id}`)
 }
 
 
@@ -47,5 +51,5 @@ export const postService = {
     createComment,
     updateComment,
     deleteComment,
-    likedPost
+    likedPost,searchLike
 }
