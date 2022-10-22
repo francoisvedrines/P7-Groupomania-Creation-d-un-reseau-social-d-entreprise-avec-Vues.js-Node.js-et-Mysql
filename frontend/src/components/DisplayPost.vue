@@ -4,7 +4,7 @@ import { postService } from '@/services'
 import DisplayComment from '@/components/DisplayComment.vue'
 import CreateComment from '@/components/CreateComment.vue'
 import ModalPostUpdate from '@/components/modalUpdate/ModalPostUpdate.vue'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 
 
@@ -17,8 +17,8 @@ export default {
             comments: Array,
             comment: Object,
             id: Number,
-            isLiked: Boolean,
-            revealUpdate: false,
+            isLiked: "",
+            revealUpdate: false
         }
     },
     components: {
@@ -31,7 +31,6 @@ export default {
         posts: Array,
     },
     mounted() {
-            
         //récupère la liste des commentaires au montage
         postService.getComments(this.post.postId)
             .then(res => {
@@ -45,7 +44,8 @@ export default {
 
     },
     computed: {
-        ...mapGetters(['userId', 'admin']),
+        //récupération des données dans le store
+        ...mapState(['userId', 'admin']),
         //contrôle si l'utilisateur est auteur ou administrateur pour l'authorisation d'édition
         author: function () {
             return this.userId === this.post.user_id || this.admin === 1
@@ -57,8 +57,12 @@ export default {
         Liked() {
             postService.likedPost(this.post.postId)
                 .then(res => {
-                    this.$store.dispatch('getAllPosts')
-                })
+                    postService.searchLike(this.post.postId)
+                     .then(res => {
+                         this.isLiked = !!res.data.result[0]
+                         this.$store.dispatch('getAllPosts')
+                     })
+                 })
                 .catch(error => console.log(error))
         },
         // requête pour supression d'un post
@@ -67,7 +71,6 @@ export default {
                 postService.deletePost(this.post.postId)
                     .then(res => {
                         this.$store.dispatch('getAllPosts')
-                        postService.getComments(this.post.postId)
                     })
         },
         //méthode pour afficher ou masquer la modale d'édition du post

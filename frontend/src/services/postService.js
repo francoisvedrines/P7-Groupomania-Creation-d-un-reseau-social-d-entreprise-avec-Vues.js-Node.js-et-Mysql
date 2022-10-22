@@ -51,5 +51,6 @@ export const postService = {
     createComment,
     updateComment,
     deleteComment,
-    likedPost,searchLike
+    likedPost,
+    searchLike
 }
