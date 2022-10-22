@@ -24,7 +24,7 @@ export default {
             bodyUser.append('firstname', this.firstname)
             bodyUser.append('lastname', this.lastname)
             bodyUser.append('avatar', this.avatar)
-            
+            if(this.firstname != "" && this.lastname != ""){
             // requête axios pour envoi a la base de données
             userService.updateUser(bodyUser, this.user.id)
                 .then(res => {
@@ -32,6 +32,7 @@ export default {
                     this.$store.dispatch('getUserById')
                 })
                 .catch(error => console.log(error.response.data))
+            }
         },
     }
 }
@@ -40,7 +41,7 @@ export default {
 
 <template>
 
-    <article class="col-lg-8 mt-3">
+    <article class="col-lg-12 mt-3">
         <div class="card">
             <div>
                 <h5 class="m-2 text-decoration-underline">Modifier Profil</h5>
@@ -73,7 +74,7 @@ export default {
                 </section>
                 <div class="row">
                     <div class="col-sm-9">
-                        <input @click="Submit()" type="button" class="btn button-color px-4" value="Enregistrer">
+                        <input @click.prevent="Submit()" type="button" class="btn button-color px-4" value="Enregistrer">
                     </div>
                 </div>
             </div>

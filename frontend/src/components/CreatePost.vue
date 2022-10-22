@@ -7,7 +7,7 @@ export default {
   data() {
     return {
       title: "",
-      message: "",
+      message: ""
     }
   },
   methods: {
@@ -23,15 +23,17 @@ export default {
       bodyPost.append('message', this.message)
       bodyPost.append('attachment', this.attachment)
       // requête axios pour envoi a la base de données
+      if(this.title != "" && this.message != ""){
       postService.createPost(bodyPost)
         .then(res => {
           this.$store.dispatch('getAllPosts')
-          //remise à zéro du formulaire
-          this.title = ""
-          this.message = ""
-          this.attachment = ""
+           //remise à zéro du formulaire
+           this.title = ""
+           this.message= ""
+           this.$refs.fileupload.value = null
         })
-        .catch(error => console.log(error.response.data))
+        .catch(error => console.log(error))
+      }
     },
     //méthode pour le redimensionnement auto du textarea
     resize() {
@@ -46,23 +48,31 @@ export default {
 <template>
 
   <article>
-    <div>
-      <h3>Nouveau message :</h3>
-      <label for="inputTitle"> Titre</label>
-      <input type="text" id="inputTitle" class="form-control shadow-sm" placeholder="Donnez un titre ..."
-        aria-label="titre" v-model="this.title">
-      <label for="inputContent"> Que voulez-vous dire ?</label>
-      <textarea class="form-control shadow-sm" id="inputPost" placeholder="Commencez à écrire ici" @input="resize()"
-        ref="textarea" v-model="message"></textarea>
-    </div>
-    <div class="mt-1">
-      <label for="formFile " class="d-block form-label">Joindre une image</label>
-      <div class="d-flex">
-        <input class=" form-control form-control-sm input-file shadow-sm" id="formFile" type="file"
-          v-on:change="fileSelectPost">
-        <input type="submit" class="d-inline btn button-color btn-sm ms-auto" value="Envoyer" @click="Publish()">
+    <form ref="createPost">
+      <div>
+        <h3>Nouveau message :</h3>
+        <label class="labelPost my-1" for="inputTitle"> Titre</label>
+        <input type="text" id="inputTitle" class="form-control shadow-sm" placeholder="titre obligatoire"
+          aria-label="titre" v-model="this.title">
+        <label class="labelPost my-1" for="inputContent"> Que voulez-vous dire ?</label>
+        <textarea class="form-control shadow-sm" id="inputPost" placeholder="message obligatoire" @input="resize()"
+          ref="textarea" v-model="message"></textarea>
       </div>
-    </div>
+      <div class="mt-1">
+        <label for="formFile" class="d-block labelPost my-1">Joindre une image</label>
+        <div class="d-flex">
+          <input class=" form-control form-control-sm input-file shadow-sm" id="formFile" ref="fileupload" type="file"
+            v-on:change="fileSelectPost">
+          <input type="submit" class="d-inline btn button-color btn-sm ms-auto" value="Envoyer" @click.prevent="Publish()">
+        </div>
+      </div>
+  </form>
   </article>
 
 </template>
+
+<style>
+.labelPost {
+  font-size: 1.1rem;
+}
+</style>

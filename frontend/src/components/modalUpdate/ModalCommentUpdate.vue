@@ -18,9 +18,11 @@ export default {
     methods: {
         //méthode pour l'enregistrement des modifications du commentaire
         Publish() {
-            postService.updateComment({ 'message': this.comment.message }, this.comment.commentId)
-                .then(res =>  this.ToggleModal())
-                .catch(error => console.log(error))
+            if (this.message != null) {
+                postService.updateComment({ 'message': this.comment.message }, this.comment.commentId)
+                    .then(res =>  this.ToggleModal())
+                    .catch(error => console.log(error))
+            }
         },
         //methode pour redimensionner le textarea
         resize() {

@@ -59,7 +59,7 @@ export default {
                     </div>
                     <small v-if="v$.checkPassword.$error">{{ v$.checkPassword.$errors[0].$message }}</small>
                     <div class=" mt-4 text-secondary">
-                        <input @click="Submit()" type="button" class="btn button-color px-4" value="Enregistrer">
+                        <input @click.prevent="Submit()" type="submit" class="btn button-color px-4" value="Enregistrer">
                     </div>
                 </div>
             </article>

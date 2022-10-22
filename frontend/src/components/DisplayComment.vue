@@ -7,7 +7,7 @@ export default {
     name: 'DisplayComment',
     data() {
         return {
-            revealUpdate: false,
+            revealUpdate: false
         }
     },
     props: {
@@ -27,6 +27,7 @@ export default {
                         console.log(this.post.postId)
                        postService.getComments(this.post.postId)
                     })
+                    .catch(error => console.log(error))
         },
         // méthode pour afficher ou masquer la modale d'édition d'un commentaire
         ToggleModal() {

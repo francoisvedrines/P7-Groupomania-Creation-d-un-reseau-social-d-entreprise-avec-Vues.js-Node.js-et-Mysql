@@ -2,12 +2,13 @@
 
 import { postService } from '@/services'
 
+
 export default {
     name: 'CreateComment',
-    default() {
+    data() {
         return {
-            message: "",
-            id: Number,
+            id: "",
+            message: null,
         }
     },
     props: {
@@ -16,11 +17,16 @@ export default {
     methods: {
         // requête pour la création d'un commentaire
         Publish() {
-            postService.createComment({"message": this.message }, this.post.postId)
-                .then(res => {
-                    postService.getComments(this.post.postId)
-                })
-                
+            if (this.message != null) {
+                postService.createComment({"message": this.message}, this.post.postId)
+                    .then(res => {
+                        postService.getComments(this.post.postId)
+                        console.log("envoi")
+                        //remise à zéro du formulaire
+                        this.message= ""
+                    })
+                    .catch(error => console.log(error))
+                }    
         },
         //méthode pour le redimensionement auto du textarea
         resize() {
@@ -36,10 +42,12 @@ export default {
 
 
 <template>
-    <article id="creat-comment" class="d-flex m-3">
+    <article id="creat-comment">
+        <form  class="d-flex m-3">
         <textarea class="form-control form-Comment shadow-sm" id="inputComment" placeholder="Commentez ..."
             @input="resize()" ref="textarea" v-model="message"></textarea>
-        <input type="button" class="btn button-color btn-sm my-auto ms-2" value="Envoyer" @click="Publish()">
+            <input type="button" class="btn button-color btn-sm my-auto ms-2" value="Envoyer" @click="Publish()">
+        </form>
     </article>
 
 </template>
