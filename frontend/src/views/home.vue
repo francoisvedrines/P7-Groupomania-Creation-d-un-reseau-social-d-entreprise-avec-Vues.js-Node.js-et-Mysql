@@ -4,7 +4,7 @@ import HeaderMain from '@/components/headerMain.vue'
 import CreatePost from '@/components/CreatePost.vue'
 import DisplayPost from '@/components/DisplayPost.vue'
 
-import {mapGetters} from 'vuex'
+import {mapState} from 'vuex'
 
 export default {
   name: 'Home',
@@ -13,12 +13,19 @@ export default {
       title: String,
       content: String,
       attachment: String,
+      revealCreatePost: false,
     }
   },
   components: {
     HeaderMain,
     CreatePost,
     DisplayPost
+},
+methods:{
+ // méthode pour afficher ou masquer la modale d'édition d'un commentaire
+ ToggleModal() {
+            this.revealCreatePost = !this.revealCreatePost
+        }
 },
   beforeMount () {
     // déclenche la récupération de l'utilisateur en cours dans le store
@@ -31,7 +38,7 @@ export default {
   },
   computed:{
     //accès à la lecture du tableau posts du store
-    ...mapGetters(['posts'])
+    ...mapState(['posts'])
     
   }
 }
@@ -45,15 +52,26 @@ export default {
   <main>
     <div class="container">
 
-      <CreatePost />
-
-      <hr class="dropdow-divider mt-5">
-
-      <DisplayPost v-for="post in posts" :key="post.postId" :post="post" />
+      <button v-if="revealCreatePost == false" id="btn-display-create" class="btn ms-auto" type="button" @click="ToggleModal">Créer un nouveau message</button>
       
-
+      <CreatePost  :revealCreatePost="revealCreatePost" :ToggleModal="ToggleModal"/>
+      <div class="d-flex mt-5">
+      <h3 v-if="posts == '' " class="m-auto"> Aucun message publié. Créez le premier!</h3>
+      </div>
+      <DisplayPost v-for="post in posts" :key="post.postId" :post="post" />
+    
     </div>
   </main>
 
 </template>
 
+
+
+
+<style scoped>
+
+#btn-display-create{
+  background-color: var(--color-secondary);
+}
+
+</style>
