@@ -7,7 +7,7 @@ export default {
     name: 'DisplayComment',
     data() {
         return {
-            revealUpdate: false
+            revealUpdate: false,
         }
     },
     props: {
@@ -15,6 +15,7 @@ export default {
         posts: Array,
         comment: Object,
     },
+    emits:['refreshPost'],
     components: {
         ModalCommentUpdate
     },
@@ -24,8 +25,7 @@ export default {
             if (confirm('Etes-vous sur de supprimer le commentaire?'))
                 postService.deleteComment(this.comment.commentId)
                     .then(res => {
-                        console.log(this.post.postId)
-                       postService.getComments(this.post.postId)
+                       this.$emit('refreshPost')
                     })
                     .catch(error => console.log(error))
         },
@@ -57,9 +57,9 @@ export default {
             <div class="me-1">
                 <p class="mx-2 card-title fst-italic"> {{comment.message}} </p>
                 <i class="bi bi-pencil-square position-absolute top-100 start-0 translate-middle" role="button"
-                    v-if="author" @click="ToggleModal"></i>
+                    v-if="author" @click.prevent="ToggleModal"></i>
                 <i class="bi bi-trash-fill position-absolute top-100 start-100 translate-middle" role="button"
-                    v-if="author" @click="DeleteComment"></i>
+                    v-if="author" @click.prevent="DeleteComment"></i>
             </div>
         </div>
     </section>
