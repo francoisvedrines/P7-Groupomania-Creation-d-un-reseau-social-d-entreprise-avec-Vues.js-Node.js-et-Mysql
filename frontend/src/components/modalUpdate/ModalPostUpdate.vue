@@ -30,6 +30,7 @@ export default {
                 // requête axios pour envoi a la base de données
                 postService.updatePost(bodyPost, this.post.postId)
                     .then((res) => {
+                        this.$store.dispatch('getAllPosts')
                         this.ToggleModal()
                     })
                     .catch(error => console.log(error.response.data))
