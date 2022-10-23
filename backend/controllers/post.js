@@ -33,7 +33,7 @@ exports.createPost = (req, res) => {
         title: req.body.title,
         message: req.body.message,
         attachment: attachment,
-        datetime: new Date().toLocaleString("af-ZA", { timeZone: "Europe/Paris" })
+        datetime: new Date().toLocaleString("fr", { timeZone: "Europe/Paris" })
     }
 
     //vérification si l'utilisateur existe
@@ -119,7 +119,7 @@ exports.modifyPost = (req, res) => {
                         params.push(message)
                     }
                     //concaténation pour la finaliser "l'assemblage" de la requête en enlevant la dernière virgule présente dans le tableau
-                    const datetime = new Date().toLocaleString("af-ZA", { timeZone: "Europe/Paris" })
+                    const datetime = new Date().toLocaleString("fr", { timeZone: "Europe/Paris" })
                     query = query + 'datetime = ?,'
                     query = query.substring(0, query.length - 1) + ' where postId = ? '
                     params.push(datetime, req.params.id)
