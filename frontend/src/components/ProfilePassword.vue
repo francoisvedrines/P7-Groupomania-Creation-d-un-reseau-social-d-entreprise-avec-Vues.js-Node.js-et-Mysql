@@ -1,6 +1,7 @@
 <script>
+
 import { userService } from '@/services'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 //import des composants pour ulisier le contrôleur de formulaire vuelidate
 import { useVuelidate } from '@vuelidate/core'
@@ -24,12 +25,14 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['user'])
+        //récupération des données de l'utilisateur connecté
+        ...mapState(['user'])
     },
     methods: {
         //méthode pour l'enregistrement du nouveau mot de passe 
         Submit() {
             this.v$.$validate()
+            //blocage de la possiblité d'un requête sans payload
             if (this.v$.$errors.length === 0) {
                 // requête axios pour envoi a la base de données
                 userService.updatePassword({ 'password': this.password }, this.user.id)

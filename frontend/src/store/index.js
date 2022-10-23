@@ -7,16 +7,11 @@ import { postService, userService } from '@/services'
 
 export default createStore({
     state: {
-        //données de connexion utilisateur
         userId: "",
         admin: "",
-        // données db utilisateurs
         user: {},
-        users: [],
-        // données db posts
         posts: [],
-
-
+        comments: [],
     },
     getters: {
         //données de connexion utilisateur
@@ -26,10 +21,6 @@ export default createStore({
         admin(state) {
             return state.admin
         },
-        // données db utilisateurs
-        users(state) {
-            return state.users
-        },
         user(state) {
             return state.user
         },
@@ -37,9 +28,9 @@ export default createStore({
         posts(state) {
             return state.posts
         },
-        
-
-       
+        comments(state) {
+            return state.comments
+        },
     },
     mutations: {
         //données de connexion utilisateur
@@ -50,9 +41,6 @@ export default createStore({
             state.admin = admin
         },
         //données db utilisateurs
-        GET_USERS(state, users) {
-            state.users = users
-        },
         GET_USER_BY_ID(state, user) {
             state.user = user
         },
@@ -61,8 +49,10 @@ export default createStore({
         GET_POSTS(state, posts) {
             state.posts = posts
         },
-       
-    
+        GET_COMMENTS(state, comments) {
+            state.comments = comments
+        },
+        
     },
     actions: {
         //données connexion utilisateur
@@ -73,13 +63,7 @@ export default createStore({
             commit("SET_ADMIN", admin)
         },
         //données db utilisateurs
-        getUsers({ commit }) {
-            userService.getUsers()
-                .then((res) => {
-                    const users = res.data
-                    commit("GET_USERS", users)
-                })
-        },
+        
         getUserById({ commit }) {
             const id = this.state.userId
             userService.getUserById(id)
@@ -97,14 +81,20 @@ export default createStore({
                 })
         },
 
-       
+        getComments( {commit }, postId) {
+            postService.getComments(postId)
+            .then((res) =>{
+            const comments = res.data
+            commit("GET_COMMENTS", comments)
+        })
+        },
     },
 
-    // stockage des données de le session storage
+    // persistance de la connecxion en stockant le userID dans le session storage
     plugins: [createPersistedState({
         storage: window.sessionStorage,
-        paths: ['userId', 'admin', 'user']
+        paths: ['userId', 'user', 'admin']
     })
-    ],
+    ]
 })
 

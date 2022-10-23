@@ -1,9 +1,11 @@
 <script>
 
 import { accountService } from '@/services'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'HeaderMain',
+  components:{
+  },
   methods: {
     //méthode pour la décoonexion de l'utilisateur (supression du local storage) et redirection ver la page login
     logout() {
@@ -12,10 +14,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['user'])
-
-  }
+    //récupération des données de l'utilisateur connecté
+    ...mapState(["user"])
+  },
 }
+
 </script>
 
 
@@ -24,7 +27,7 @@ export default {
     <div class="container">
       <section class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <img class="bi me-2" src="/logo.svg" alt="Groupomania">
-        <ul class="nav col-12 col-lg-auto me-lg-auto justify-content-center">
+        <ul class="nav col-lg-auto py-2 me-lg-auto justify-content-center">
           <li>
             <router-link to="/" class=" px-2 ">Accueil</router-link>
           </li>
@@ -32,10 +35,7 @@ export default {
             <router-link :to="`/profile/${user.id}`" class="px-2 ">Profil</router-link>
           </li>
         </ul>
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input type="search" class="form-control" placeholder="Rechercher ..." aria-label="Search">
-        </form>
-        <div class="d-flex">
+        <div class="d-flex py-2">
           <img v-if="!!user.avatar" :src="user.avatar" class="rounded-circle mx-3 avatar">
           <div>
             <p class="username">{{user.firstname}} {{user.lastname}}</p>
@@ -64,5 +64,10 @@ header li a:focus {
 .username {
   color: var(--color-secondary);
   font-size: 1.5rem;
+}
+
+.avatar {
+  height: 6rem;
+  width: 6rem;
 }
 </style>

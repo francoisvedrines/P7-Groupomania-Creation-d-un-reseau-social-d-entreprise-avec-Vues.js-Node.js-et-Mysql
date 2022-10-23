@@ -29,7 +29,9 @@ export default {
             if (this.post.title != "" && this.post.message != "") {
                 // requête axios pour envoi a la base de données
                 postService.updatePost(bodyPost, this.post.postId)
-                    .then(res => this.ToggleModal())
+                    .then((res) => {
+                        this.ToggleModal()
+                    })
                     .catch(error => console.log(error.response.data))
             }
         },
@@ -37,7 +39,7 @@ export default {
         resize() {
             let element = this.$refs["textarea"];
             element.style.height = "18px";
-            element.style.height = element.scrollHeight + "px";
+            element.style.height = (element.scrollHeight) + "px";
         }
     },
 }
@@ -64,10 +66,33 @@ export default {
                     <input class=" form-control form-control-sm input-file shadow-sm" id="formFile" type="file"
                         v-on:change="fileSelectPost">
                     <input type="submit" class="d-inline btn button-color btn-sm ms-auto" value="Modifier"
-                        @click="Publish()">
+                        @click.prevent="Publish()">
                 </div>
             </div>
         </div>
     </article>
 
 </template>
+
+
+<style>
+#inputPost {
+    min-height: 300px;
+}
+.card {
+    max-width: 60%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin: auto;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid transparent;
+    border-radius: .25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
+}
+
+</style>

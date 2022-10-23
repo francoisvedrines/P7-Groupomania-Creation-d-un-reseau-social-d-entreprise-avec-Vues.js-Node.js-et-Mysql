@@ -5,72 +5,61 @@
     --color-primary: #FD2D01;
     --color-secondary: #FFD7D7;
     --color-tertiary: #4E5166;
-
 }
 
 
-.bd-placeholder-img {
-    font-size: 1.125rem;
-    text-anchor: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-}
-
-@media (min-width: 768px) {
-    .bd-placeholder-img-lg {
-        font-size: 3.5rem;
-    }
-}
-
+/*****style commun ***********/
 html, body {
     height: 100%;
 }
 
-
 header > h1 {
     font-size: 1.5rem;
-}
-
-h1 {
     color: var(--color-primary)
 }
-
-
 h2 ,h3, h4, h5, h6 , label {
     color: var(--color-tertiary);
 }
-
 .form-sign {
     width: 100%;
     max-width: 350px;
     padding: 15px;
     margin: auto;
 }
-
 .form-sign input {
     margin-bottom: 3px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
-
 article .btn.button-color {
     background-color: var(--color-primary);
     color: white;
 }
-
 article .btn.button-color:hover {
     background-color: var(--color-secondary);
     color: black;
 }
 
-.avatar{
-    width: 6rem;
-    height: 6rem;
+.bi-pencil-square,
+.bi-trash-fill {
+    font-size: 1.1rem;
+    color: var(--color-primary)
+}
+.bi-heart ,
+.bi-heart-fill{
+    font-size: 1.5rem;
+    color: var(--color-primary)
 }
 
+
+
+/******formulaires **********/
 textarea {
     max-height: 500px;
+}
+small {
+    color: var(--color-primary);
+    font-weight: 700;
 }
 
 /******** modales  ***********/
@@ -86,12 +75,12 @@ textarea {
     justify-content: center;
     align-items: center;
 }
-
 .overlay {
     background-color: rgba(0, 0, 0, 0.6);
-    background-image: url(../../../public/logo.svg);
-    background-size: 100%;
+    background-image: url(../logo.svg);
+    background-size: 60%;
     background-repeat: no-repeat;
+    background-position-x: center;
     background-position-y: bottom;
     position: fixed;
     top: 0;
@@ -99,7 +88,6 @@ textarea {
     left: 0;
     right: 0;
 }
-
 .modal {
     padding: 10px;
 }

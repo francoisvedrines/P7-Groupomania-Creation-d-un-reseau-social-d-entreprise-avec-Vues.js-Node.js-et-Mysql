@@ -1,6 +1,8 @@
 <script>
 import { userService } from '@/services'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
+
+
 export default {
     name: 'ProfileEdit',
     data() {
@@ -10,7 +12,8 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['user'])
+        //récupération des données de l'utilisateur connecté
+        ...mapState(['user'])
     },
     methods: {
         //lors de l'événement onchange (selection d'un fichier), enregistrement de ce fichier dans une variable
@@ -24,12 +27,18 @@ export default {
             bodyUser.append('firstname', this.firstname)
             bodyUser.append('lastname', this.lastname)
             bodyUser.append('avatar', this.avatar)
-            if(this.firstname != "" && this.lastname != ""){
+            // blocage dde la possibilité d'envoyer une requête sans payload
+            if(this.firstname.length > 0 || this.lastname.length > 0 || this.$refs.fileupload.value != ""){
             // requête axios pour envoi a la base de données
             userService.updateUser(bodyUser, this.user.id)
                 .then(res => {
                     alert("profil enregistré")
+                    //remise à jour des informations affichées
                     this.$store.dispatch('getUserById')
+                    //vidage des champs
+                    this.firstname = ""
+                    this.lastname = ""
+                    this.$refs.fileupload.value = null
                 })
                 .catch(error => console.log(error.response.data))
             }
@@ -69,7 +78,7 @@ export default {
                         <label for="formFile" class="mx-1 d-block form-label">Modifier l'avatar</label>
                     </div>
                     <div class="d-flex">
-                        <input  v-on:change="fileSelectPost" class=" form-control form-control-sm input-file" id="formFile" type="file">
+                        <input v-on:change="fileSelectPost" ref="fileupload" class=" form-control form-control-sm input-file" id="formFile" type="file">
                     </div>
                 </section>
                 <div class="row">

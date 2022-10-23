@@ -12,8 +12,8 @@ const errorPassword = helpers.withMessage(
 )
 
  const requiredValue = helpers.withMessage("Ce champs est obligatoire", required)
- const minL = (min) => helpers.withMessage(`Longueur minimum authorisée ${min} `, minLength(min)) 
- const maxL = (max) => helpers.withMessage(`Longueur maximum authorisée ${max} `, maxLength(max)) 
+ const minL = (min) => helpers.withMessage(`Longueur minimum authorisée ${min} caractères`, minLength(min)) 
+ const maxL = (max) => helpers.withMessage(`Longueur maximum authorisée ${max} caractères`, maxLength(max)) 
  const mail = helpers.withMessage("La saisie ne correspond pas au format d'une adresse email", email)
  const same = (pswd) => helpers.withMessage("Les deux saisies du nouveau mot de passe doivent correspondre", sameAs(pswd))
 export {

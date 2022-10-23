@@ -63,10 +63,10 @@ export default {
               <button id="" class="d-inline btn button-color btn-sm ms-auto" type="button" @click="ToggleModal">Fermer</button>
             </div>
             <label class="labelPost my-1" for="inputTitle"> Titre</label>
-            <input type="text" id="inputTitle" class="form-control shadow-sm" placeholder="titre obligatoire"
+            <input type="text" id="inputTitle" class="form-control shadow-sm" placeholder="Titre obligatoire"
               aria-label="titre" v-model="this.title">
             <label class="labelPost my-1" for="inputContent"> Que voulez-vous dire ?</label>
-            <textarea class="form-control shadow-sm" id="inputPost" placeholder="message obligatoire" @input="resize()"
+            <textarea class="form-control shadow-sm" id="inputPost" placeholder="Message obligatoire" @input="resize()"
               ref="textarea" v-model="message"></textarea>
           </div>
           <div class="mt-1">

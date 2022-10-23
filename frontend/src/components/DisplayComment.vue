@@ -15,7 +15,7 @@ export default {
         posts: Array,
         comment: Object,
     },
-    emits:['refreshPost'],
+    emits:['refreshComments'],
     components: {
         ModalCommentUpdate
     },
@@ -25,7 +25,7 @@ export default {
             if (confirm('Etes-vous sur de supprimer le commentaire?'))
                 postService.deleteComment(this.comment.commentId)
                     .then(res => {
-                       this.$emit('refreshPost')
+                       this.$emit('refreshComments')
                     })
                     .catch(error => console.log(error))
         },
@@ -50,15 +50,15 @@ export default {
     <section id="display-comment">
         <p class="mx-3">Commentaires:</p>
         <div class=" d-flex align-items-center m-3 border shadow-sm rounded position-relative">
-            <div class=" flex-column me-4">
-                <img class=" rounded-circle p-2 avatar" v-if="!!comment.avatar" :src="comment.avatar">
+            <div class=" flex-column me-4" >
+                <img class=" rounded-circle p-2 avatar " v-if="!!comment.avatar" :src="comment.avatar">
                 <p class="mx-2 card-title"> {{comment.firstname}} {{comment.lastname}}</p>
             </div>
-            <div class="me-1">
-                <p class="mx-2 card-title fst-italic"> {{comment.message}} </p>
-                <i class="bi bi-pencil-square position-absolute top-100 start-0 translate-middle" role="button"
+            <div class="me-1 overflow-auto ">
+                <p class="mx-2 fst-italic content"> {{comment.message}} </p>
+                <i class="bi bi-pencil-square position-absolute top-100 start-100 translate-middle" role="button"
                     v-if="author" @click.prevent="ToggleModal"></i>
-                <i class="bi bi-trash-fill position-absolute top-100 start-100 translate-middle" role="button"
+                <i class="bi bi-trash-fill position-absolute top-100 start-0 translate-middle" role="button"
                     v-if="author" @click.prevent="DeleteComment"></i>
             </div>
         </div>
@@ -69,8 +69,12 @@ export default {
 </template>
 
 <style scoped>
-.user-comment .avatar {
-    width: 4rem;
-    height: 4rem;
+.avatar {
+    width: 3rem;
+    height: 3rem;
 }
+p {
+    font-size: 0.8rem;
+}
+
 </style>
