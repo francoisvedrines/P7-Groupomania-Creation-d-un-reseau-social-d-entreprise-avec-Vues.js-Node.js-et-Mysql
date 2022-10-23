@@ -76,11 +76,9 @@ export default {
 
       <CreatePost :revealCreatePost="revealCreatePost" :ToggleModal="ToggleModal" />
 
+      
       <div class="d-flex mt-5">
-        <h3 v-if="posts == '' " class="m-auto"> Aucun message publié. Créez le premier!</h3>
-      </div>
-      <div class="d-flex mt-5">
-        <h3 v-if="filteredList == '' " class="m-auto"> Cette recherche ne donne aucun résultat.</h3>
+        <h3 v-if="filteredList == '' " class="m-auto"> Aucun résultat.</h3>
       </div>
 
       <DisplayPost v-for="post in filteredList" :key="post.postId" :post="post" />
