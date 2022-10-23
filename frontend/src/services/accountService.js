@@ -17,7 +17,8 @@ const signup = (data) => {
 // function suppression du token dans le local storage lors de la déconnexion
 const logout = () => {
     localStorage.removeItem('token')
-    sessionStorage.removeItem('vuex')
+    localStorage.removeItem('vuex')
+    localStorage.removeItem('_secure__ls__metadata')
 }
 
 //function de stokage d'un token dans le local storage

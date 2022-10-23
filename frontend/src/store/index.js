@@ -1,6 +1,9 @@
 import { createStore } from 'vuex'
 //importation du module pour la persistance de vuex pendant les rechargements
 import createPersistedState from "vuex-persistedstate"
+//import de secureLS pour crypter les données dans le localstorage
+import SecureLS from 'secure-ls'
+const ls = new SecureLS({ isCompression: false })
 //import des service axios pour les requêtes http
 import { postService, userService } from '@/services'
 
@@ -52,7 +55,7 @@ export default createStore({
         GET_COMMENTS(state, comments) {
             state.comments = comments
         },
-        
+
     },
     actions: {
         //données connexion utilisateur
@@ -63,7 +66,7 @@ export default createStore({
             commit("SET_ADMIN", admin)
         },
         //données db utilisateurs
-        
+
         getUserById({ commit }) {
             const id = this.state.userId
             userService.getUserById(id)
@@ -81,19 +84,24 @@ export default createStore({
                 })
         },
 
-        getComments( {commit }, postId) {
+        getComments({ commit }, postId) {
             postService.getComments(postId)
-            .then((res) =>{
-            const comments = res.data
-            commit("GET_COMMENTS", comments)
-        })
+                .then((res) => {
+                    const comments = res.data
+                    commit("GET_COMMENTS", comments)
+                })
         },
     },
 
-    // persistance de la connecxion en stockant le userID dans le session storage
+    // persistance de la connexion en stockant dans les infos utlisateur de façon crypté le local storage
     plugins: [createPersistedState({
-        storage: window.sessionStorage,
-        paths: ['userId', 'user', 'admin']
+        paths: ['userId', 'user', 'admin'],
+        storage: {
+            key: 'secure_store',
+            getItem: (key) => ls.get(key),
+            setItem: (key, value) => ls.set(key, value),
+            removeItem: (key) => ls.remove(key),
+        }
     })
     ]
 })
