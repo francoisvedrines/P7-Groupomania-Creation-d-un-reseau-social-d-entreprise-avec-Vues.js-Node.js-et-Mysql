@@ -3,12 +3,10 @@ import { helpers, required , minLength, maxLength, email, sameAs} from "@vuelida
 
 //message d'erreur personnalisé pour vuelidate
 const errorPassword = helpers.withMessage(
-    'Le mot de passe doit contenir entre 8 et 20 caractère, avec au moins une majuscule, une miniscule, un chiffre et un caractère spécial.',
+    'Le mot de passe doit contenir entre 8 et 20 caractère, avec au moins une majuscule, une miniscule, un chiffre et un caractère spécial ( &@*.!?,+-:/#_ ).',
     (value) =>
-        RegExp(/[\w\W]+/).test(value) &&
-        RegExp(/[0-9]+/).test(value) &&
-        RegExp(/[A-Z]+/).test(value) &&
-        RegExp(/[&@*.!?,+-/]/).test(value)
+        RegExp(/[a-zA-Z0-9]+/).test(value) &&
+        RegExp(/[&@*.!?,+\-:\/#_]+/).test(value)
 )
 
  const requiredValue = helpers.withMessage("Ce champs est obligatoire", required)
