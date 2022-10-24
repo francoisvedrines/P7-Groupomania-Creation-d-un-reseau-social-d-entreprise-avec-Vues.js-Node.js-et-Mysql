@@ -14,8 +14,6 @@ const keyToken = process.env.KEY_TOKEN
 
 //fonction de création d'un compte
 exports.signup = (req, res) => {
-    console.log(req.body)
-    console.log(req.file)
     const { email, password, firstname, lastname } = req.body
     //controle si formulaire entierement rempli
     if (!email || !password || !firstname || !lastname)
@@ -91,8 +89,6 @@ exports.login = (req, res) => {
 //fonction de mise à jours des informations utilisateur
 exports.update = (req, res) => {
     const { firstname, lastname } = req.body
-    console.log(req.body)
-    console.log(req.file)
     mysql.query(
         //vérification que la fiche utilisateur existe dans la base
         'SELECT * FROM users WHERE id = ?', req.params.id, (error, result) => {

@@ -27,7 +27,6 @@ exports.createPost = (req, res) => {
     // renommage image fourni par l'utilisateur, sinon vide
     const attachment = req.file ? `${req.protocol}://${req.get('host')}/assets/attachments/${req.file.filename}` : ""
     // définition des champs pour envoi a la base de donnée
-    console.log(attachment)
     const post = {
         user_id: req.auth.userId,
         title: req.body.title,
@@ -94,7 +93,6 @@ exports.modifyPost = (req, res) => {
                 if (result[0].user_id == req.auth.userId || req.auth.admin == 1) {
                     // si envoi d'une image
                     if (req.file) {
-                        console.log(req.file)
                         //déclaration d'un nouveau nom de fichier pour la nouvelle image
                         const newAttachment = `${req.protocol}://${req.get('host')}/assets/attachments/${req.file.filename}`
                         // personalisation de la rêquete mysql
