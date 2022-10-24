@@ -90,6 +90,6 @@ export default {
   font-size: 1.1rem;
 }
 #inputPost {
-  min-height: 300px;
+  min-height: 150px;
 }
 </style>

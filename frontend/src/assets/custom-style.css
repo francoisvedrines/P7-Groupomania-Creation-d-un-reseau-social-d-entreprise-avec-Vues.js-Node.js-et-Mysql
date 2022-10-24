@@ -66,7 +66,7 @@ small {
 
 .bloc-modal {
     position: fixed;
-    top: 5rem;
+    top: 2rem;
     left: 0;
     right: 0;
     z-index: 1;
