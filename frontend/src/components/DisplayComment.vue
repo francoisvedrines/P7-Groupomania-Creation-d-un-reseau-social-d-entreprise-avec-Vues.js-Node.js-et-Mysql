@@ -15,7 +15,7 @@ export default {
         posts: Array,
         comment: Object,
     },
-    emits:['refreshComments'],
+    emits:['getComments'],
     components: {
         ModalCommentUpdate
     },
@@ -25,7 +25,7 @@ export default {
             if (confirm('Etes-vous sur de supprimer le commentaire?'))
                 postService.deleteComment(this.comment.commentId)
                     .then(res => {
-                       this.$emit('refreshComments')
+                       this.$emit('getComments')
                     })
                     .catch(error => console.log(error))
         },

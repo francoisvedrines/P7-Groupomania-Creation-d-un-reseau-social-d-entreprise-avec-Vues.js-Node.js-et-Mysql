@@ -17,7 +17,8 @@ export default {
             comments: Array,
             comment: Object,
             id: Number,
-            isLiked: "",
+            isLiked: Boolean,
+            nbrLikes: Number,
             revealUpdate: false
         }
     },
@@ -32,16 +33,10 @@ export default {
     },
 
     mounted() {
-        //récupère la liste des commentaires au montage
-        postService.getComments(this.post.postId)
-            .then(res => {
-                this.comments = res.data
-            })
-            //récupération de l'état like de l'utilisateur sur un post
-        postService.searchLike(this.post.postId)
-            .then(res => {
-                this.isLiked = !!res.data.result[0]
-            })
+        //récupère la liste des commentaires du post, fonction déclaré dans methods
+        this.getComments()
+        //récupération de la liste des likes sur un post, fonction déclaré dans methods
+       this.getLikes()
     },
     computed: {
         //récupération des données dans le store
@@ -50,25 +45,32 @@ export default {
         author: function () {
             return this.userId === this.post.user_id || this.admin === 1
         }
-        
+
     },
     methods: {
-        refreshComments(){
+        getComments() {
             postService.getComments(this.post.postId)
-            .then(res => {
-                this.comments = res.data
-            })
+                .then(res => {
+                    this.comments = res.data
+                })
+                .catch(error => console.log(error))
+        },
+        //récupere la liste des likes d'un post
+        getLikes(){
+            postService.listLikes(this.post.postId)
+                        .then(res => {
+                            this.isLiked = !!res.data.result.find(el => el.user_id == this.userId)
+                            this.nbrLikes = res.data.result.length
+                        })
+                        .catch(error => console.log(error))
         },
         //fonction incrémentation like et dislike
         Liked() {
             postService.likedPost(this.post.postId)
                 .then(res => {
-                    postService.searchLike(this.post.postId)
-                     .then(res => {
-                         this.isLiked = !!res.data.result[0]
-                         this.$store.dispatch('getAllPosts')
-                     })
-                 })
+                    //récupére la nouvelle liste de likes
+                    this.getLikes()
+                })
                 .catch(error => console.log(error))
         },
         // requête pour supression d'un post
@@ -78,13 +80,14 @@ export default {
                     .then(res => {
                         this.$store.dispatch('getAllPosts')
                     })
+                    .catch(error => console.log(error))
         },
         //méthode pour afficher ou masquer la modale d'édition du post
         ToggleModal() {
             this.revealUpdate = !this.revealUpdate
         }
     }
-    
+
 }
 
 </script>
@@ -92,13 +95,11 @@ export default {
 <template>
 
     <div class="card mx-auto my-4 shadow-lg">
-        <i class="bi bi-trash-fill position-absolute top-0 start-0" role="button"
-            v-if="author" @click="DeletePost"></i>
-            <i class="bi bi-pencil-square position-absolute top-0 end-0" role="button"
-                v-if="author" @click="ToggleModal"></i>
+        <i class="bi bi-trash-fill position-absolute top-0 start-0" role="button" v-if="author" @click="DeletePost"></i>
+        <i class="bi bi-pencil-square position-absolute top-0 end-0" role="button" v-if="author"
+            @click="ToggleModal"></i>
         <article id="display-post" class="card-body">
-            <div
-                class="d-flex align-items-center mb-3 border shadow rounded title-background position-relative">
+            <div class="d-flex align-items-center mb-3 border shadow rounded title-background position-relative">
                 <div>
                     <img class="rounded-circle avatar p-2 mx-auto" v-if="!!post.avatar" :src="post.avatar">
                     <p class="card-title m-1 name-user">{{ post.firstname }} {{ post.lastname }} </p>
@@ -118,14 +119,15 @@ export default {
             <button @click="Liked" id="like" class="mx-3 btn btn-outline-light">
                 <i v-if="isLiked" class="bi bi-heart-fill"></i>
                 <i v-else class="bi bi-heart"></i>
-                <span class="ms-1 count badge border"> {{post.like_count}} j'aime</span>
+                <span class="ms-1 count badge border"> {{ this.nbrLikes }} j'aime</span>
             </button>
 
         </article>
 
-        <DisplayComment v-for="comment in comments" :key="comment.id" :comment="comment" :post="post" @refreshComments="refreshComments"/>
+        <DisplayComment v-for="comment in comments" :key="comment.id" :comment="comment" :post="post"
+            @getComments="getComments" />
 
-        <CreateComment :post="post" :comment="comment"  @refreshComments="refreshComments"/>
+        <CreateComment :post="post" :comment="comment" @getComments="getComments" />
 
         <ModalPostUpdate :post="post" :revealUpdate="revealUpdate" :ToggleModal="ToggleModal" />
 
@@ -134,7 +136,6 @@ export default {
 </template>
 
 <style>
-
 .form-post {
     height: 150px;
 }
@@ -169,8 +170,8 @@ img {
 }
 
 .avatar {
-height: 4rem;
-width: 4rem;
+    height: 4rem;
+    width: 4rem;
 }
 
 .count {
@@ -181,7 +182,7 @@ width: 4rem;
     background: linear-gradient(-20deg, var(--color-secondary)65%, var(--color-primary));
 }
 
-small{
+small {
     font-size: 0.7rem;
     font-style: italic;
 }

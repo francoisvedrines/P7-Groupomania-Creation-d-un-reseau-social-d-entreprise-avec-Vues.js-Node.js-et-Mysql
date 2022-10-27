@@ -10,7 +10,7 @@ const auth = require('../middleware/auth')
 
 const likeCtrl = require('../controllers/like')
 
-router.get('/:post', auth, likeCtrl.researchLike)
+router.get('/:post', auth, likeCtrl.listLiked)
 router.post('/:post', auth, likeCtrl.like)
 
 

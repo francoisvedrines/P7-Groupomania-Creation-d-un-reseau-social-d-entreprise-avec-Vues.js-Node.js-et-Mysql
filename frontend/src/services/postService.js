@@ -36,8 +36,8 @@ const deleteComment = (id) => {
 const likedPost = (id) => {
     return Axios.post(`/likes/${id}`)
 }
-//voir si like déja présent
-const searchLike = (id) => {
+//voir la liste de tout les likes d'un post
+const listLikes = (id) => {
     return Axios.get(`/likes/${id}`)
 }
 
@@ -52,5 +52,5 @@ export const postService = {
     updateComment,
     deleteComment,
     likedPost,
-    searchLike
+    listLikes
 }

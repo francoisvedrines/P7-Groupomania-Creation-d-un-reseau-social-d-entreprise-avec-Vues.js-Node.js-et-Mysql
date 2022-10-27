@@ -7,14 +7,14 @@ export default {
     name: 'CreateComment',
     data() {
         return {
-            id: "",
+            id: Number,
             message: null,
         }
     },
     props: {
         post: Object,
     },
-    emits:['refreshComments'],
+    emits:['getComments'],
     methods: {
         // requête pour la création d'un commentaire
         Publish() {
@@ -24,7 +24,7 @@ export default {
                         postService.getComments(this.post.postId)
                         //remise à zéro du formulaire
                         this.message= ""
-                        this.$emit('refreshComments')
+                        this.$emit('getComments')
                     })
                     .catch(error => console.log(error))
                 }    
