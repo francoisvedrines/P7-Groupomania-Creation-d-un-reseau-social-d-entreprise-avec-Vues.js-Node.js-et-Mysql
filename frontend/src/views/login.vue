@@ -41,12 +41,12 @@ export default {
     }
   },
   methods: {
-    async signIn() {
+    signIn() {
       //appel de la fonction de vérification des champs avec vuelidate
       this.v$.$validate()
       if (this.v$.$errors.length === 0) {
         // envois de la requête de connexion axios, enregistrement du token dans le localstorage et rediction sur la page principale
-        await accountService.login({ 'email': this.email, 'password': this.password })
+         accountService.login({ 'email': this.email, 'password': this.password })
           .then((res) => {
             if (res) {
               accountService.saveToken(res.data.token)
@@ -76,8 +76,8 @@ export default {
         accountService.signup(body)
           .then(res => {
             if (res) {
-              this.msgSignUp = "Le compte a été créé. Vous pouvez dès à présent vous connecter."
-              this.isLoginMode = true
+               this.msgSignUp= "le compte à bien été créé" 
+               setTimeout(() => this.signIn() , 1000)
             } else {
               this.msgSignUp = "Un compte utilisateur est déjà existant avec cette adresse email"
             }
